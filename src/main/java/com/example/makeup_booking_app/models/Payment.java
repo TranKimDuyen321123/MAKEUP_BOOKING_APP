@@ -1,10 +1,13 @@
-package com.example.makeup_booking_app;
+package com.example.makeup_booking_app.models;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.Date;
 
 @Entity
 @Table(name = "payments")
@@ -12,11 +15,12 @@ public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private Integer id;
+    private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "appointment_id")
-    private Appointment appointment;
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "booking_id", nullable = false)
+    private Booking booking;
 
     @Column(name = "amount", nullable = false, precision = 10, scale = 2)
     private BigDecimal amount;
@@ -25,36 +29,32 @@ public class Payment {
     @Column(name = "payment_method", nullable = false)
     private String paymentMethod;
 
-    @Column(name = "transaction_id", nullable = false)
+    @Column(name = "transaction_id")
     private String transactionId;
 
     @ColumnDefault("'PENDING'")
     @Lob
-    @Column(name = "status")
-    private String status;
+    @Column(name = "payment_status")
+    private String paymentStatus;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_at")
     private Instant createdAt;
 
-    @ColumnDefault("CURRENT_TIMESTAMP")
-    @Column(name = "updated_at")
-    private Instant updatedAt;
-
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Appointment getAppointment() {
-        return appointment;
+    public Booking getBooking() {
+        return booking;
     }
 
-    public void setAppointment(Appointment appointment) {
-        this.appointment = appointment;
+    public void setBooking(Booking booking) {
+        this.booking = booking;
     }
 
     public BigDecimal getAmount() {
@@ -81,28 +81,23 @@ public class Payment {
         this.transactionId = transactionId;
     }
 
-    public String getStatus() {
-        return status;
+    public String getPaymentStatus() {
+        return paymentStatus;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
     }
 
     public Instant getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Instant createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Instant getUpdatedAt() {
-        return updatedAt;
-    }
+    public void setStatus(String pending) {
 
-    public void setUpdatedAt(Instant updatedAt) {
-        this.updatedAt = updatedAt;
     }
-
 }

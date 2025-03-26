@@ -1,17 +1,24 @@
-package com.example.makeup_booking_app;
+package com.example.makeup_booking_app.models;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.Instant;
+import java.util.Date;
 
 @Entity
 @Table(name = "notifications")
 public class Notification {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private Integer id;
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "user_id", nullable = false)
+    private com.example.makeup_booking_app.models.User user;
 
     @Lob
     @Column(name = "message", nullable = false)
@@ -26,12 +33,20 @@ public class Notification {
     @Column(name = "created_at")
     private Instant createdAt;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public com.example.makeup_booking_app.models.User getUser() {
+        return user;
+    }
+
+    public void setUser(com.example.makeup_booking_app.models.User user) {
+        this.user = user;
     }
 
     public String getMessage() {
@@ -54,8 +69,10 @@ public class Notification {
         return createdAt;
     }
 
-    public void setCreatedAt(Instant createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
+    public void setRead(boolean b) {
+    }
 }

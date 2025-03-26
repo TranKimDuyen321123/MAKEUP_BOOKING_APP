@@ -1,8 +1,10 @@
-package com.example.makeup_booking_app;
+package com.example.makeup_booking_app.models;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 
 @Entity
 @Table(name = "services")
@@ -10,18 +12,14 @@ public class Service {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private Integer id;
+    private Long id;
 
-    @Column(name = "name", nullable = false, length = 100)
+    @Column(name = "name", nullable = false)
     private String name;
 
     @Lob
     @Column(name = "description")
     private String description;
-
-    @Lob
-    @Column(name = "category", nullable = false)
-    private String category;
 
     @Column(name = "price", nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
@@ -29,11 +27,15 @@ public class Service {
     @Column(name = "duration", nullable = false)
     private Integer duration;
 
-    public Integer getId() {
+    @ColumnDefault("CURRENT_TIMESTAMP")
+    @Column(name = "created_at")
+    private Instant createdAt;
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -53,14 +55,6 @@ public class Service {
         this.description = description;
     }
 
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
     public BigDecimal getPrice() {
         return price;
     }
@@ -75,6 +69,14 @@ public class Service {
 
     public void setDuration(Integer duration) {
         this.duration = duration;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
     }
 
 }
