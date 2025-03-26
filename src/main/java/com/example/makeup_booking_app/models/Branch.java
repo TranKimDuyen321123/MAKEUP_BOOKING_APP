@@ -1,13 +1,14 @@
-package com.example.makeup_booking_app;
+package com.example.makeup_booking_app.models;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 
 @Entity
-@Table(name = "users")
-public class User {
+@Table(name = "branches")
+public class Branch {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -16,19 +17,17 @@ public class User {
     @Column(name = "name", nullable = false, length = 100)
     private String name;
 
-    @Column(name = "email", nullable = false, length = 150)
-    private String email;
+    @Column(name = "address", nullable = false)
+    private String address;
 
-    @Column(name = "password", nullable = false)
-    private String password;
-
-    @Column(name = "phone", length = 15)
+    @Column(name = "phone", length = 20)
     private String phone;
 
-    @ColumnDefault("'CUSTOMER'")
-    @Lob
-    @Column(name = "role")
-    private String role;
+    @Column(name = "latitude", precision = 10, scale = 8)
+    private BigDecimal latitude;
+
+    @Column(name = "longitude", precision = 11, scale = 8)
+    private BigDecimal longitude;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_at")
@@ -50,20 +49,12 @@ public class User {
         this.name = name;
     }
 
-    public String getEmail() {
-        return email;
+    public String getAddress() {
+        return address;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getPhone() {
@@ -74,12 +65,20 @@ public class User {
         this.phone = phone;
     }
 
-    public String getRole() {
-        return role;
+    public BigDecimal getLatitude() {
+        return latitude;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setLatitude(BigDecimal latitude) {
+        this.latitude = latitude;
+    }
+
+    public BigDecimal getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(BigDecimal longitude) {
+        this.longitude = longitude;
     }
 
     public Instant getCreatedAt() {

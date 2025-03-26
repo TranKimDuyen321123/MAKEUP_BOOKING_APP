@@ -1,7 +1,9 @@
-package com.example.makeup_booking_app;
+package com.example.makeup_booking_app.models;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.Instant;
 
@@ -13,14 +15,18 @@ public class Notification {
     @Column(name = "id", nullable = false)
     private Integer id;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "user_id", nullable = false)
+    private com.example.makeup_booking_app.models.User user;
+
     @Lob
     @Column(name = "message", nullable = false)
     private String message;
 
-    @ColumnDefault("'UNREAD'")
-    @Lob
-    @Column(name = "status")
-    private String status;
+    @ColumnDefault("0")
+    @Column(name = "is_read")
+    private Boolean isRead;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_at")
@@ -34,6 +40,14 @@ public class Notification {
         this.id = id;
     }
 
+    public com.example.makeup_booking_app.models.User getUser() {
+        return user;
+    }
+
+    public void setUser(com.example.makeup_booking_app.models.User user) {
+        this.user = user;
+    }
+
     public String getMessage() {
         return message;
     }
@@ -42,12 +56,12 @@ public class Notification {
         this.message = message;
     }
 
-    public String getStatus() {
-        return status;
+    public Boolean getIsRead() {
+        return isRead;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setIsRead(Boolean isRead) {
+        this.isRead = isRead;
     }
 
     public Instant getCreatedAt() {

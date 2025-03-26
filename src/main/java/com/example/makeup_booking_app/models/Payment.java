@@ -1,7 +1,9 @@
-package com.example.makeup_booking_app;
+package com.example.makeup_booking_app.models;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -14,9 +16,10 @@ public class Payment {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "appointment_id")
-    private Appointment appointment;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "booking_id", nullable = false)
+    private Booking booking;
 
     @Column(name = "amount", nullable = false, precision = 10, scale = 2)
     private BigDecimal amount;
@@ -25,21 +28,17 @@ public class Payment {
     @Column(name = "payment_method", nullable = false)
     private String paymentMethod;
 
-    @Column(name = "transaction_id", nullable = false)
-    private String transactionId;
-
     @ColumnDefault("'PENDING'")
     @Lob
     @Column(name = "status")
     private String status;
 
+    @Column(name = "transaction_id", length = 100)
+    private String transactionId;
+
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_at")
     private Instant createdAt;
-
-    @ColumnDefault("CURRENT_TIMESTAMP")
-    @Column(name = "updated_at")
-    private Instant updatedAt;
 
     public Integer getId() {
         return id;
@@ -49,12 +48,12 @@ public class Payment {
         this.id = id;
     }
 
-    public Appointment getAppointment() {
-        return appointment;
+    public Booking getBooking() {
+        return booking;
     }
 
-    public void setAppointment(Appointment appointment) {
-        this.appointment = appointment;
+    public void setBooking(Booking booking) {
+        this.booking = booking;
     }
 
     public BigDecimal getAmount() {
@@ -73,14 +72,6 @@ public class Payment {
         this.paymentMethod = paymentMethod;
     }
 
-    public String getTransactionId() {
-        return transactionId;
-    }
-
-    public void setTransactionId(String transactionId) {
-        this.transactionId = transactionId;
-    }
-
     public String getStatus() {
         return status;
     }
@@ -89,20 +80,20 @@ public class Payment {
         this.status = status;
     }
 
+    public String getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
+    }
+
     public Instant getCreatedAt() {
         return createdAt;
     }
 
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public Instant getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Instant updatedAt) {
-        this.updatedAt = updatedAt;
     }
 
 }
