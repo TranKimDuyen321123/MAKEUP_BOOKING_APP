@@ -4,6 +4,7 @@ import com.example.makeup_booking_app.models.User;
 import com.example.makeup_booking_app.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,30 +12,33 @@ import java.util.Optional;
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository; // Inject UserRepository
+    private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
-    // Lấy danh sách tất cả khách hàng
+    @Autowired
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = new BCryptPasswordEncoder(); // Initialize BCryptPasswordEncoder
+    }
+
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-    // Tìm khách hàng theo ID
     public Optional<User> getUserById(Long id) {
         return userRepository.findById(id);
     }
 
-    // Tìm khách hàng theo email
     public Optional<User> getUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
-    // Tạo mới hoặc cập nhật thông tin khách hàng
     public User saveUser(User user) {
+        // Encode the password before saving
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
-    // Xóa khách hàng theo ID
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
