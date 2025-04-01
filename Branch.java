@@ -1,35 +1,37 @@
 package com.example.makeup_booking_app;
 
 import jakarta.persistence.*;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "branches")
 public class Branch {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, unique = true)
-    private String id;
+    private Integer id;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, length = 100)
     private String name;
 
-    @Column(name = "address", nullable = false)
+    @Column(name = "address", nullable = false, length = 200)
     private String address;
 
-    @Column(name = "latitude", nullable = false) // Vi do
-    private double latitude;
+    @Column(name = "phone", length = 10)
+    private String phone;
 
-    @Column(name = "longitude", nullable = false) // Kinh do
-    private double longitude;
+    @Column(name = "created_at", nullable = false, updatable = false,
+            insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Timestamp createdAt;
 
     public Branch() {
     }
 
-    public Branch(String id, String name, String address, double latitude, double longitude) {
+    public Branch(Integer id, String name, String address, String phone) {
         this.id = id;
         this.name = name;
         this.address = address;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.phone = phone;
     }
 
     @Override
@@ -38,12 +40,12 @@ public class Branch {
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
+                ", phone='" + phone + '\'' +
+                ", createdAt=" + createdAt +
                 '}';
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -55,15 +57,15 @@ public class Branch {
         return address;
     }
 
-    public double getLatitude() {
-        return latitude;
+    public String getPhone() {
+        return phone;
     }
 
-    public double getLongitude() {
-        return longitude;
+    public Timestamp getCreatedAt() {
+        return createdAt;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -75,11 +77,11 @@ public class Branch {
         this.address = address;
     }
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
     }
 }
