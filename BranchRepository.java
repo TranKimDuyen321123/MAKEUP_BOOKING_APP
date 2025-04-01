@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.example.makeup_booking_app.Branch;
 import org.springframework.stereotype.Repository;
 import java.util.List;
+import java.sql.Timestamp;
 
 @Repository
 public interface BranchRepository extends JpaRepository<Branch, String>{
@@ -15,15 +16,15 @@ public interface BranchRepository extends JpaRepository<Branch, String>{
 
     List<Branch> findByAddressContaining(String keyword);
 
-    List<Branch> findByLatitude(double latitude);
+    List<Branch> findByPhone(String phone);
 
-    List<Branch> findByLongitude(double longitude);
+    List<Branch> findByCreatedAt(Timestamp createdAt);
 
     void deleteByName(String name);
 
     void deleteByAddress(String address);
 
-    void deleteByLatitude(double latitude);
+    void deleteByPhone(String phone);
 
-    void deleteByLongitude(double longitude);
+    void deleteByCreatedAt(Timestamp createdAt);
 }
