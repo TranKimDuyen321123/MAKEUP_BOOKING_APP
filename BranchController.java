@@ -44,6 +44,18 @@ public class BranchController {
         return branchService.findByPhone(phone);
     }
 
+    //Tim kiem chi nhanh theo vi do
+    @GetMapping("/search-by-latitude")
+    public List<Branch> findByLatitude(@RequestParam double latitude){
+        return branchService.findByLatitude(latitude);
+    }
+
+    //Tim kiem chi nhanh theo kinh do
+    @GetMapping("/search-by-longitude")
+    public List<Branch> findByLongitude(@RequestParam double longitude) {
+        return branchService.findByLongitude(longitude);
+    }
+
     //Tim kiem chi nhanh theo thoi gian tao
     @GetMapping("/search-by-created-at")
     public List<Branch> findByCreatedAt(@RequestParam Timestamp createdAt){
@@ -71,6 +83,20 @@ public class BranchController {
         return "Branch '" + phone + "' has been deleted.";
     }
 
+    //Xoa chi nhanh theo vi do
+    @GetMapping("/delete-by-latitude")
+    public String deleteByLatitude(@RequestParam double latitude) {
+        branchService.deleteByLatitude(latitude);
+        return "Branch '" + latitude + "' has been deleted.";
+    }
+
+    //Xoa chi nhanh theo kinh do
+    @GetMapping("/delete-by-longitude")
+    public String deleteByLongitude(@RequestParam double longitude) {
+        branchService.deleteByLongitude(longitude);
+        return "Branch '" + longitude + "' has been deleted.";
+    }
+
     //Xoa chi nhanh theo thoi gian tao
     @DeleteMapping("/delete-by-created-at")
     public String deleteByCreatedAt(@RequestParam Timestamp createdAt){
@@ -82,6 +108,12 @@ public class BranchController {
     @PostMapping
     public Branch saveBranch(@RequestBody Branch branch){
         return branchService.saveBranch(branch);
+    }
+
+    //Tim kiem chi nhanh gan nhat
+    @GetMapping("/nearest")
+    public Branch findNearestBranch(@RequestParam double latitude, @RequestParam double longitude){
+        return branchService.findNearestBranch(latitude, longitude);
     }
 
     //Lay danh sach tat ca cac chi nhanh
