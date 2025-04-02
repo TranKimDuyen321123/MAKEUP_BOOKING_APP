@@ -18,6 +18,10 @@ public interface BranchRepository extends JpaRepository<Branch, String>{
 
     List<Branch> findByPhone(String phone);
 
+    List<Branch> findByLatitude(double latitude);
+
+    List<Branch> findByLongitude(double longitude);
+
     List<Branch> findByCreatedAt(Timestamp createdAt);
 
     void deleteByName(String name);
@@ -25,6 +29,10 @@ public interface BranchRepository extends JpaRepository<Branch, String>{
     void deleteByAddress(String address);
 
     void deleteByPhone(String phone);
+
+    void deleteByLatitude(double latitude);
+
+    void deleteByLongitude(double longitude);
 
     void deleteByCreatedAt(Timestamp createdAt);
 }
