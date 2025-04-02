@@ -14,7 +14,7 @@ public interface MakeupServiceRepository extends JpaRepository<MakeupService, In
 
     List<MakeupService> findByDescriptionContaining(String keyword);
 
-    List<MakeupService> findByCategory(String category);
+    List<MakeupService> findByCategory(MakeupService.Category category);
 
     List<MakeupService> findByPriceBetween(BigDecimal minPrice, BigDecimal maxPrice);
 
@@ -22,11 +22,11 @@ public interface MakeupServiceRepository extends JpaRepository<MakeupService, In
 
     void deleteByName(String name);
 
-    void deleteByCategory(String category);
+    void deleteByCategory(MakeupService.Category category);
 
     boolean existsByName(String name);
 
     boolean existsByDescription(String description);
 
-    boolean existsByCategory(String category);
+    boolean existsByCategory(MakeupService.Category category);
 }
