@@ -8,6 +8,8 @@ import com.example.makeupbooking.service.AppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable; // Missing import
 
 import java.util.List;
 import java.util.Optional;
@@ -67,5 +69,11 @@ public class UserController {
     public ResponseEntity<List<Appointment>> getUserAppointments(@PathVariable Long id) {
         List<Appointment> appointments = appointmentService.getAppointmentsByUserId(id);
         return ResponseEntity.ok(appointments);
+    }
+
+    // API tìm kiếm người dùng
+    @GetMapping("/search")
+    public Page<User> searchUsers(@RequestParam(defaultValue = "") String keyword, Pageable pageable) {
+        return userService.searchUsers(keyword, pageable);
     }
 }
