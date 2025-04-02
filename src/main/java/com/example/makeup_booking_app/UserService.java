@@ -5,6 +5,8 @@ import com.example.makeup_booking_app.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable; 
 
 import java.util.List;
 import java.util.Optional;
@@ -16,9 +18,9 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        this.passwordEncoder = new BCryptPasswordEncoder(); // Initialize BCryptPasswordEncoder
+        this.passwordEncoder = passwordEncoder; 
     }
 
     public List<User> getAllUsers() {
@@ -34,12 +36,15 @@ public class UserService {
     }
 
     public User saveUser(User user) {
-        // Encode the password before saving
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
+    }
+    // Phương thức tìm kiếm người dùng có phân trang
+    public Page<User> searchUsers(String keyword, Pageable pageable) {
+        return userRepository.findByNameContainingIgnoreCaseOrEmailContainingIgnoreCase(keyword, keyword, pageable);
     }
 }
