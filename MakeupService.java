@@ -18,9 +18,9 @@ public class MakeupService {
     @Column(name = "description")
     private String description;
 
-    @Lob
+    @Enumerated(EnumType.STRING)
     @Column(name = "category", nullable = false)
-    private String category;
+    private Category category;
 
     @Column(name = "price", nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
@@ -31,7 +31,7 @@ public class MakeupService {
     public MakeupService() {
     }
 
-    public MakeupService(Integer id, String name, String description, String category, BigDecimal price, Integer duration) {
+    public MakeupService(Integer id, String name, String description, Category category, BigDecimal price, Integer duration) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -42,7 +42,7 @@ public class MakeupService {
 
     @Override
     public String toString() {
-        return "Service{" +
+        return "MakeupService{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
@@ -61,19 +61,19 @@ public class MakeupService {
     }
 
     public String getDescription() {
-        return description; //su mieu ta
+        return description;
     }
 
-    public String getCategory() {
-        return category; //loai
+    public Category getCategory() {
+        return category;
     }
 
     public BigDecimal getPrice() {
-        return price; //gia
+        return price;
     }
 
     public Integer getDuration() {
-        return duration; //khoang thoi gian
+        return duration;
     }
 
     public void setId(Integer id) {
@@ -88,7 +88,7 @@ public class MakeupService {
         this.description = description;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(Category category) {
         this.category = category;
     }
 
@@ -98,5 +98,9 @@ public class MakeupService {
 
     public void setDuration(Integer duration) {
         this.duration = duration;
+    }
+
+    public enum Category{
+        Bridal, Casual, Party, Skincare
     }
 }
