@@ -12,32 +12,42 @@ public class BranchService {
     @Autowired
     private BranchRepository branchRepository;
 
-    //Tim kiem chi nhanh theo ten
+    //Tim chi nhanh theo ten
     public List<Branch> findByName(String name){
         return branchRepository.findByName(name);
     }
 
-    //Tim kiem chi nhanh theo ten chua tu khoa
+    //Tim chi nhanh theo ten chua tu khoa
     public List<Branch> findByNameContaining(String keyword){
         return branchRepository.findByNameContaining(keyword);
     }
 
-    //Tim kiem chi nhanh theo dia chi
+    //Tim chi nhanh theo dia chi
     public List<Branch> findByAddress(String address){
         return branchRepository.findByAddress(address);
     }
 
-    //Tim kiem chi nhanh theo dia chi chua tu khoa
+    //Tim chi nhanh theo dia chi chua tu khoa
     public List<Branch> findByAddressContaining(String keyword){
         return branchRepository.findByAddressContaining(keyword);
     }
 
-    //Tim kiem chi nhanh theo so dien thoai
+    //Tim chi nhanh theo so dien thoai
     public List<Branch> findByPhone(String phone){
         return branchRepository.findByPhone(phone);
     }
 
-    //Tim kiem chi nhanh theo thoi gian tao
+    //Tim kiem chi nhanh theo vi do
+    public List<Branch> findByLatitude(double latitude) {
+        return branchRepository.findByLongitude(latitude);
+    }
+
+    //Tim kiem chi nhanh theo kinh do
+    public List<Branch> findByLongitude(double longitude) {
+        return branchRepository.findByLatitude(longitude);
+    }
+
+    //Tim chi nhanh theo thoi gian tao
     public List<Branch> findByCreatedAt(Timestamp createdAt){
         return branchRepository.findByCreatedAt(createdAt);
     }
@@ -57,6 +67,16 @@ public class BranchService {
         branchRepository.deleteByPhone(phone);
     }
 
+    //Xoa chi nhanh theo vi do
+    public void deleteByLatitude(double latitude) {
+        branchRepository.deleteByLatitude(latitude);
+    }
+
+    //Xoa chi nhanh theo kinh do
+    public void deleteByLongitude(double longitude) {
+        branchRepository.deleteByLongitude(longitude);
+    }
+
     //Xoa chi nhanh theo thoi gian tao
     public void deleteByCreatedAt(Timestamp createdAt){
         branchRepository.deleteByCreatedAt(createdAt);
@@ -65,6 +85,22 @@ public class BranchService {
     //Them chi nhanh
     public Branch saveBranch(Branch branch){
         return branchRepository.save(branch);
+    }
+
+    // Tim kiem chi nhanh gan nhat
+    public Branch findNearestBranch(double latitude, double longitude) {
+        List<Branch> branches = branchRepository.findAll();
+        Branch nearestBranch = null;
+        double minDistance = Double.MAX_VALUE;
+
+        for (Branch branch : branches) {
+            double distance = branch.distanceTo(latitude, longitude);
+            if (distance < minDistance) {
+                minDistance = distance;
+                nearestBranch = branch;
+            }
+        }
+        return nearestBranch;
     }
 
     //Lay danh sach tat ca cac chi nhanh
