@@ -2,7 +2,6 @@ package com.example.makeup_booking_app;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -12,37 +11,37 @@ public class MakeupServiceController {
     @Autowired
     private MakeupServiceService makeupServiceService;
 
-    //Tim dich vu theo ten
+    //Tim kiem dich vu theo ten
     @GetMapping("/search-by-name")
     public List<MakeupService> findByName(@RequestParam String name){
         return makeupServiceService.findByName(name);
     }
 
-    //Tim dich vu theo ten chua tu khoa
+    //Tim kiem dich vu theo ten chua tu khoa
     @GetMapping("/search-by-name-keyword")
     public List<MakeupService> findByNameContaining(@RequestParam String keyword){
         return makeupServiceService.findByNameContaining(keyword);
     }
 
-    //Tim dich vu theo mo ta chua tu khoa
+    //Tim kiem dich vu theo mo ta chua tu khoa
     @GetMapping("/search-by-description-keyword")
     public List<MakeupService> findByDescriptionContaining(@RequestParam String keyword){
         return makeupServiceService.findByDescriptionContaining(keyword);
     }
 
-    //Tim dich vu theo loai
+    //Tim kiem dich vu theo loai
     @GetMapping("/search-by-category")
-    public List<MakeupService> findByCategory(@RequestParam String category){
+    public List<MakeupService> findByCategory(@RequestParam MakeupService.Category category){
         return makeupServiceService.findByCategory(category);
     }
 
-    //Tim dich vu theo khoang gia
+    //Tim kiem dich vu theo khoang gia
     @GetMapping("/search-by-price")
     public List<MakeupService> findByPriceBetween(@RequestParam BigDecimal minPrice, BigDecimal maxPrice){
         return makeupServiceService.findByPriceBetween(minPrice, maxPrice);
     }
 
-    //Tim dich vu theo khoang thoi gian
+    //Tim kiem dich vu theo khoang thoi gian
     @GetMapping("/search-by-duration")
     public List<MakeupService> findByDurationBetween(@RequestParam Integer minDuration, Integer maxDuration){
         return makeupServiceService.findByDurationBetween(minDuration, maxDuration);
@@ -57,7 +56,7 @@ public class MakeupServiceController {
 
     //Xoa dich vu theo loai
     @DeleteMapping("/delete-by-category")
-    public String deleteByCategory(@RequestParam String category){
+    public String deleteByCategory(@RequestParam MakeupService.Category category){
         makeupServiceService.deleteByCategory(category);
         return "Makeup Service '" + category + "' has been deleted.";
     }
@@ -76,7 +75,7 @@ public class MakeupServiceController {
 
     //Kiem tra dich vu co ton tai theo loai
     @GetMapping("/exists-category")
-    public boolean existsByCategory(@RequestParam String category){
+    public boolean existsByCategory(@RequestParam MakeupService.Category category){
         return makeupServiceService.existsByCategory(category);
     }
 }
