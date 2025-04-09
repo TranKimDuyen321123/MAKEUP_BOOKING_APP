@@ -1,4 +1,4 @@
-package com.example.makeup_booking_app.Controler;
+package com.example.makeup_booking_app.Controller;
 import com.example.makeup_booking_app.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

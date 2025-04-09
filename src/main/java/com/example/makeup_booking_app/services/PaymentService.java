@@ -34,4 +34,8 @@ public class PaymentService {
     public List<Payment> getPaymentsByStatus(String status) {
         return paymentRepository.findByStatus(status);
     }
+    public String createVNPayPayment(Long bookingId, Double amount) {
+        // Đây là link giả lập thanh toán để test
+        return "https://sandbox.vnpayment.vn/payment?bookingId=" + bookingId + "&amount=" + amount;
+    }
 }
