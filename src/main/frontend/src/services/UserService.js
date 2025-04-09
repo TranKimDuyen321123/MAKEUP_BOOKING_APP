@@ -1,7 +1,9 @@
-import api from './api';
+import axios from 'axios';
 
-export const getAllUsers = async () => (await api.get('/users')).data;
-export const getUserById = async (id) => (await api.get(`/users/${id}`)).data;
-export const createUser = async (user) => (await api.post('/users', user)).data;
-export const updateUser = async (id, user) => (await api.put(`/users/${id}`, user)).data;
-export const deleteUser = async (id) => (await api.delete(`/users/${id}`)).data;
+const API_BASE = 'http://localhost:8080/api/users';
+
+export const getUsers = () => axios.get(API_BASE);
+export const getUserById = (id) => axios.get(`${API_BASE}/${id}`);
+export const createUser = (data) => axios.post(API_BASE, data);
+export const updateUser = (id, data) => axios.put(`${API_BASE}/${id}`, data);
+export const deleteUser = (id) => axios.delete(`${API_BASE}/${id}`);

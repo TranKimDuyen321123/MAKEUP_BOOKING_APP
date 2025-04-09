@@ -1,18 +1,27 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import UserList from './pages/User/UserList';
-import UserForm from './pages/User/UserForm';
-import NotificationPage from './pages/Notification/NotificationPage';
+import axios from 'axios';
+import App from "./App";
 
-const App = () => (
-    <Router>
-        <Routes>
-            <Route path="/users" element={<UserList />} />
-            <Route path="/users/new" element={<UserForm />} />
-            <Route path="/users/edit/:id" element={<UserForm />} />
-            <Route path="/notifications" element={<NotificationPage />} />
-        </Routes>
-    </Router>
-);
+const API_URL = '/api/users';
 
+const getAllUsers = () => {
+    return axios.get(API_URL);
+};
+
+const getUserById = (id) => {
+    return axios.get(`${API_URL}/${id}`);
+};
+
+const createUser = (user) => {
+    return axios.post(API_URL, user);
+};
+
+const updateUser = (id, user) => {
+    return axios.put(`${API_URL}/${id}`, user);
+};
+
+const deleteUser = (id) => {
+    return axios.delete(`${API_URL}/${id}`);
+};
+
+export { getAllUsers, getUserById, createUser, updateUser, deleteUser };
 export default App;
