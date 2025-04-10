@@ -1,22 +1,30 @@
 package com.example.makeup_booking_app;
 
-import jakarta.persistence.*;
+import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.Optional;
 
-@Entity
-@Table(name = "appointment_services")
+@Service
 public class AppointmentService {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Integer id;
+    private final AppointmentRepository appointmentRepository;
 
-    public Integer getId() {
-        return id;
+    public AppointmentService(AppointmentRepository appointmentRepository) {
+        this.appointmentRepository = appointmentRepository;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public Appointment saveAppointment(Appointment appointment) {
+        return appointmentRepository.save(appointment);
     }
 
-    //TODO [Reverse Engineering] generate columns from DB
+    public Optional<Appointment> getAppointmentById(Long id) {
+        return appointmentRepository.findById(id);
+    }
+
+    public List<Appointment> getAppointmentsByUserId(Long userId) {
+        return appointmentRepository.findByUserId(userId);
+    }
+
+    public List<Appointment> getAllAppointments() {
+        return appointmentRepository.findAll();
+    }
 }

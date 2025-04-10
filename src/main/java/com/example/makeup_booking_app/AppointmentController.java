@@ -1,18 +1,16 @@
 package com.example.makeup_booking_app;
 
-import com.example.makeupbookingapp.models.Appointment;
-import com.example.makeupbookingapp.models.User;
-import com.example.makeupbookingapp.services.AppointmentService;
-import com.example.makeupbookingapp.services.EmailService;
-import com.example.makeupbookingapp.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/appointments")
+@CrossOrigin(origins = "*")
 public class AppointmentController {
+
     private final AppointmentService appointmentService;
     private final UserService userService;
     private final EmailService emailService;
@@ -26,35 +24,41 @@ public class AppointmentController {
     @PostMapping("/book")
     public ResponseEntity<String> bookAppointment(@RequestBody Appointment appointment) {
         Appointment savedAppointment = appointmentService.saveAppointment(appointment);
+        Optional<User> user = userService.getUserById(appointment.getUserId().longValue());
 
-        // Lấy thông tin người dùng để gửi email
-        Optional<User> user = userService.getUserById(appointment.getUserId());
-        if (user.isPresent()) {
-            String bookingDetails = "Ngày: " + appointment.getDate() + "\nGiờ: " + appointment.getTime();
-            emailService.sendBookingConfirmation(user.get().getEmail(), bookingDetails);
-        }
+        user.ifPresent(value -> {
+            String bookingDetails = "Thời gian: " + appointment.getAppointmentTime();
+            emailService.sendBookingConfirmation(value.getEmail(), bookingDetails);
+        });
 
         return ResponseEntity.ok("Đặt lịch thành công! Email xác nhận đã được gửi.");
     }
 
-    @PostMapping("/payment/{appointmentId}") // 🔥 ĐÃ CHUYỂN VÀO TRONG CLASS
+    @PostMapping("/payment/{appointmentId}")
     public ResponseEntity<String> updatePaymentStatus(@PathVariable Long appointmentId, @RequestParam String status) {
         Optional<Appointment> appointment = appointmentService.getAppointmentById(appointmentId);
 
         if (appointment.isPresent()) {
             Appointment updatedAppointment = appointment.get();
-            updatedAppointment.setPaymentStatus(status);
+            updatedAppointment.setStatus(status);
             appointmentService.saveAppointment(updatedAppointment);
 
-            // Gửi email thông báo trạng thái thanh toán
-            Optional<User> user = userService.getUserById(updatedAppointment.getUserId());
-            if (user.isPresent()) {
-                emailService.sendPaymentStatus(user.get().getEmail(), status);
-            }
+            Optional<User> user = userService.getUserById(updatedAppointment.getUserId().longValue());
+            user.ifPresent(value -> emailService.sendPaymentStatus(value.getEmail(), status));
 
-            return ResponseEntity.ok("Cập nhật trạng thái thanh toán thành công! Email đã được gửi.");
+            return ResponseEntity.ok("Cập nhật trạng thái thanh toán thành công!");
         }
 
         return ResponseEntity.badRequest().body("Không tìm thấy lịch hẹn!");
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Appointment>> getAppointmentsByUser(@PathVariable Long userId) {
+        return ResponseEntity.ok(appointmentService.getAppointmentsByUserId(userId));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Appointment>> getAllAppointments() {
+        return ResponseEntity.ok(appointmentService.getAllAppointments());
     }
 }

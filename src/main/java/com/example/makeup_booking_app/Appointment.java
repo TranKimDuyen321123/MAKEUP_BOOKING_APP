@@ -1,8 +1,6 @@
 package com.example.makeup_booking_app;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.ColumnDefault;
-
 import java.time.Instant;
 
 @Entity
@@ -16,15 +14,16 @@ public class Appointment {
     @Column(name = "appointment_time", nullable = false)
     private Instant appointmentTime;
 
-    @ColumnDefault("'PENDING'")
-    @Lob
     @Column(name = "status")
     private String status;
 
-    @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_at")
     private Instant createdAt;
 
+    @Column(name = "user_id", nullable = false)
+    private Integer userId;
+
+    // Getter & Setter
     public Integer getId() {
         return id;
     }
@@ -57,4 +56,11 @@ public class Appointment {
         this.createdAt = createdAt;
     }
 
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 }
