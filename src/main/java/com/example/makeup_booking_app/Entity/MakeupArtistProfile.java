@@ -1,5 +1,6 @@
-package com.example.makeup_booking_app;
+package com.example.makeup_booking_app.Entity;
 
+import com.example.makeup_booking_app.Branch;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 

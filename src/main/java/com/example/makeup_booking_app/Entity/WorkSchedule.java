@@ -1,3 +1,17 @@
+package com.example.makeup_booking_app.Entity;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Column;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import jakarta.persistence.FetchType;
 @Entity
 @Table(name = "work_schedule")
 public class WorkSchedule {
