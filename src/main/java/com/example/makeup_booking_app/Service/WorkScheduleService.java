@@ -1,8 +1,24 @@
+package com.example.makeup_booking_app.Services;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import lombok.RequiredArgsConstructor;
+import java.util.List;
+import com.example.makeup_booking_app.Entity.WorkSchedule; // Import entity
+import com.example.makeup_booking_app.Repository.WorkScheduleRepository; // Import repository
+import com.example.makeup_booking_app.Entity.MakeupArtistProfile; // Import entity
+import com.example.makeup_booking_app.Repository.MakeupArtistProfileRepository; // Import repository
+import jakarta.persistence.EntityNotFoundException;
 @Service
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class WorkScheduleService {
     private final WorkScheduleRepository repository;
     private final MakeupArtistProfileRepository artistRepository;
+
+    @Autowired
+    public WorkScheduleService(WorkScheduleRepository repository, MakeupArtistProfileRepository artistRepository) {
+        this.repository = repository;
+        this.artistRepository = artistRepository;
+    }
 
     public List<WorkSchedule> getAll() {
         return repository.findAll();
