@@ -1,7 +1,7 @@
 package com.example.makeup_booking_app.service;
 
-import com.example.makeup_booking_app.Branch;
-import com.example.makeup_booking_app.BranchRepository;
+import com.example.makeup_booking_app.model.Branch;
+import com.example.makeup_booking_app.repository.BranchRepository;
 import com.example.makeup_booking_app.repository.AppointmentRepository;
 import com.example.makeup_booking_app.repository.AppointmentServiceRepository;
 import com.example.makeup_booking_app.repository.MakeupServiceRepository;
