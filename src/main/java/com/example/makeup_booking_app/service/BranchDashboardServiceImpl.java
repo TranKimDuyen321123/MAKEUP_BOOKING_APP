@@ -33,27 +33,30 @@ public class BranchDashboardServiceImpl implements BranchDashboardService {
     private MakeupServiceRepository makeupServiceRepository;
 
     @Override
-    public BranchDashboardData getDashboardData(Long branchId) {
+    public BranchDashboardData getDashboardData(String branchId) {
         Optional<Branch> branchOptional = branchRepository.findById(branchId);
         if (branchOptional.isPresent()) {
             Branch branch = branchOptional.get();
             LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
             LocalDateTime endOfDay = LocalDate.now().atTime(LocalTime.MAX);
-
-            long bookingsToday = appointmentRepository.countByBranchIdAndAppointmentTimeBetween(
-                    branchId, startOfDay, endOfDay
-            );
-            String bookingsTodayStr = String.valueOf(bookingsToday); // ✅ Đã fix
-
+            long bookingsTodayLong = appointmentRepository.countByBranchIdAndAppointmentTimeBetween(branchId, startOfDay, endOfDay);
+            int bookingsToday = (int) bookingsTodayLong;
             List<ServiceStat> serviceStats = new ArrayList<>();
             List<Object[]> serviceCounts = appointmentServiceRepository.countServicesByBranchId(branchId);
             for (Object[] result : serviceCounts) {
                 String serviceName = (String) result[0];
-                int count = ((Number) result[1]).intValue(); // ✅ Đã fix
-                serviceStats.add(new ServiceStat(serviceName, count));
+                String countResultString = (String) result[1]; // Giá trị count đang là String
+                try {
+                    int count = Integer.parseInt(countResultString); // Chuyển String thành int
+                    serviceStats.add(new ServiceStat(serviceName, count));
+                } catch (NumberFormatException e) {
+                    // Xử lý trường hợp chuỗi không phải là số hợp lệ (ví dụ: log lỗi)
+                    System.err.println("Error parsing count: " + countResultString + " is not a valid integer.");
+                    // Bạn có thể chọn bỏ qua service stat này hoặc gán một giá trị mặc định (ví dụ: 0)
+                    // serviceStats.add(new ServiceStat(serviceName, 0));
+                }
             }
-
-            return new BranchDashboardData(branch.getName(), bookingsTodayStr, serviceStats);
+            return new BranchDashboardData(branch.getName(), bookingsToday, serviceStats);
         } else {
             return null;
         }
