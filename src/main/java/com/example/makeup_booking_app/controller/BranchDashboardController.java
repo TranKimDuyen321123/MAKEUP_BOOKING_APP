@@ -14,7 +14,7 @@ public class BranchDashboardController {
     private BranchDashboardService branchDashboardService;
 
     @GetMapping("/{branchId}/dashboard-data")
-    public ResponseEntity<BranchDashboardData> getBranchDashboardData(@PathVariable Long branchId) {
+    public ResponseEntity<BranchDashboardData> getBranchDashboardData(@PathVariable String branchId) {
         BranchDashboardData dashboardData = branchDashboardService.getDashboardData(branchId);
         if (dashboardData != null) {
             return ResponseEntity.ok(dashboardData);
