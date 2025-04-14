@@ -3,6 +3,7 @@ package com.example.makeup_booking_app.Controllers.res;
 
 import java.util.stream.Collectors;
 
+import com.example.makeup_booking_app.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,9 +56,16 @@ public class AuthsController {
     }
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody RegisterDTO registerDTO) {
-        String result = userService.registerUser(registerDTO);
-        return ResponseEntity.ok(result);
+        try {
+            User result = userService.registerUser(registerDTO);
+            return ResponseEntity.ok("User registered successfully with username: " + result.getUsername());
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Internal server error: " + e.getMessage());
+        }
     }
+
     @GetMapping("/profile")
     public String getUserProfile(HttpServletRequest request) {
         // Lấy token từ header Authorization
