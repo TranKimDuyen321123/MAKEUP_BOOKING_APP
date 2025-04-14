@@ -11,7 +11,7 @@ public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private Integer id;
+    private String id;
 
     @Column(name = "appointment_time", nullable = false)
     private Instant appointmentTime;
@@ -26,45 +26,80 @@ public class Appointment {
     private Instant createdAt;
 
     @Column(name = "user_id", nullable = false)
-    private Integer userId;
+    private String userId;
 
-    public Integer getId() {
-        return id;
+    @Column(name = "price", nullable = false)
+    private Double price;  // Thêm thuộc tính price
+
+    public Appointment(){
     }
 
-    public void setId(Integer id) {
+    public Appointment(String id, Instant appointmentTime, String status, Instant createdAt, String userId, Double price) {
         this.id = id;
+        this.appointmentTime = appointmentTime;
+        this.status = status;
+        this.createdAt = createdAt;
+        this.userId = userId;
+        this.price = price;
+    }
+
+    @java.lang.Override
+    public java.lang.String toString() {
+        return "Appointment{" +
+                "id=" + id +
+                ", appointmentTime=" + appointmentTime +
+                ", status='" + status + '\'' +
+                ", createdAt=" + createdAt +
+                ", userId=" + userId +
+                ", price=" + price +
+                '}';
+    }
+
+    public String getId() {
+        return id;
     }
 
     public Instant getAppointmentTime() {
         return appointmentTime;
     }
 
-    public void setAppointmentTime(Instant appointmentTime) {
-        this.appointmentTime = appointmentTime;
-    }
-
     public String getStatus() {
         return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public Instant getCreatedAt() {
         return createdAt;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setAppointmentTime(Instant appointmentTime) {
+        this.appointmentTime = appointmentTime;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setPrice(Double price) {
+        this.price = price;
     }
 }
