@@ -1,5 +1,8 @@
 package com.example.makeup_booking_app.controller;
 
+import com.example.makeup_booking_app.model.MakeupService;
+import com.example.makeup_booking_app.service.MakeupServiceService;
+import com.example.makeup_booking_app.repository.MakeupServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
