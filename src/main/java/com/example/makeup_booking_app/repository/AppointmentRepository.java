@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import com.example.makeup_booking_app.model.Appointment;
 
 @Repository
