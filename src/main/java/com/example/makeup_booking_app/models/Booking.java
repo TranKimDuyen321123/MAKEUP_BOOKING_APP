@@ -27,7 +27,7 @@ public class Booking {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "service_id", nullable = false)
-    private com.example.makeup_booking_app.models.Service service;
+    private MakeupService makeupService;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -71,12 +71,12 @@ public class Booking {
         this.artist = artist;
     }
 
-    public com.example.makeup_booking_app.models.Service getService() {
-        return service;
+    public MakeupService getService() {
+        return makeupService;
     }
 
-    public void setService(com.example.makeup_booking_app.models.Service service) {
-        this.service = service;
+    public void setService(MakeupService makeupService) {
+        this.makeupService = makeupService;
     }
 
     public com.example.makeup_booking_app.models.Branch getBranch() {

@@ -1,4 +1,4 @@
-package com.example.makeup_booking_app.Controller.res;
+package com.example.makeup_booking_app.Controllers.res;
 
 
 

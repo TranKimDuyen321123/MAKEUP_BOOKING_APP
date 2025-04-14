@@ -15,6 +15,7 @@ public class BookingService {
     }
 
     public Optional<Booking> getBookingById(Long id) {
+
         return bookingRepository.findById(id);
     }
 

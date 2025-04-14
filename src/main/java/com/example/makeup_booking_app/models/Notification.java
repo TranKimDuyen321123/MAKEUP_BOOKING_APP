@@ -70,7 +70,7 @@ public class Notification {
     }
 
     public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+        this.createdAt = createdAt.toInstant();
     }
 
     public void setRead(boolean b) {

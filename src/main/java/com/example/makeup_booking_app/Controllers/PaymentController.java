@@ -1,4 +1,4 @@
-package com.example.makeup_booking_app.Controller;
+package com.example.makeup_booking_app.Controllers;
 
 import com.example.makeup_booking_app.services.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
