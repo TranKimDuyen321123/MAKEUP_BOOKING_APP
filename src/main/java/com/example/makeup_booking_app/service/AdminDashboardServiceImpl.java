@@ -2,7 +2,7 @@ package com.example.makeup_booking_app.service;
 
 import com.example.makeup_booking_app.dto.AdminDashboardData;
 import com.example.makeup_booking_app.repository.AppointmentRepository;
-import com.example.makeup_booking_app.UserRepository;
+import com.example.makeup_booking_app.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
