@@ -1,49 +1,57 @@
 package com.example.makeup_booking_app.model;
 
 import jakarta.persistence.*;
-import com.example.makeup_booking_app.model.MakeupArtist;
-
-import java.time.LocalTime;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "working_hours")
 public class WorkingHour {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Integer id;
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @Column(name = "id", nullable = false, unique = true)
+    private String id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "makeup_artist_id")
-    private MakeupArtist makeupArtist;
+    @ManyToOne
+    @JoinColumn(name = "branch_id", nullable = false)
+    private Branch branch;
 
-    @Lob
     @Column(name = "day_of_week", nullable = false)
     private String dayOfWeek;
 
-    @Column(name = "start_time", nullable = false)
-    private LocalTime startTime;
+    @Column(name = "opening_time", nullable = false)
+    private String openingTime;
 
-    @Column(name = "end_time", nullable = false)
-    private LocalTime endTime;
+    @Column(name = "closing_time", nullable = false)
+    private String closingTime;
 
-    @Column(name = "break_time")
-    private LocalTime breakTime;
+    // Constructors, Getters, Setters, and toString methods
+    public WorkingHour() {
+    }
 
-    public Integer getId() {
+    public WorkingHour(String id, Branch branch, String dayOfWeek, String openingTime, String closingTime) {
+        this.id = id;
+        this.branch = branch;
+        this.dayOfWeek = dayOfWeek;
+        this.openingTime = openingTime;
+        this.closingTime = closingTime;
+    }
+
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public MakeupArtist getMakeupArtist() {
-        return makeupArtist;
+    public Branch getBranch() {
+        return branch;
     }
 
-    public void setMakeupArtist(MakeupArtist makeupArtist) {
-        this.makeupArtist = makeupArtist;
+    public void setBranch(Branch branch) {
+        this.branch = branch;
     }
 
     public String getDayOfWeek() {
@@ -54,28 +62,30 @@ public class WorkingHour {
         this.dayOfWeek = dayOfWeek;
     }
 
-    public LocalTime getStartTime() {
-        return startTime;
+    public String getOpeningTime() {
+        return openingTime;
     }
 
-    public void setStartTime(LocalTime startTime) {
-        this.startTime = startTime;
+    public void setOpeningTime(String openingTime) {
+        this.openingTime = openingTime;
     }
 
-    public LocalTime getEndTime() {
-        return endTime;
+    public String getClosingTime() {
+        return closingTime;
     }
 
-    public void setEndTime(LocalTime endTime) {
-        this.endTime = endTime;
+    public void setClosingTime(String closingTime) {
+        this.closingTime = closingTime;
     }
 
-    public LocalTime getBreakTime() {
-        return breakTime;
+    @Override
+    public String toString() {
+        return "WorkingHour{" +
+                "id='" + id + '\'' +
+                ", branch=" + branch +
+                ", dayOfWeek='" + dayOfWeek + '\'' +
+                ", openingTime='" + openingTime + '\'' +
+                ", closingTime='" + closingTime + '\'' +
+                '}';
     }
-
-    public void setBreakTime(LocalTime breakTime) {
-        this.breakTime = breakTime;
-    }
-
 }
