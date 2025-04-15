@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { Chart } from 'chart.js/auto';
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Tooltip, Legend } from 'chart.js';
+import { Bar } from 'react-chartjs-2';
 import './BranchManagerDashboard.css'; // Import CSS
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
 function BranchManagerDashboard() {
     const { branchId } = useParams();
@@ -33,12 +36,6 @@ function BranchManagerDashboard() {
         }
     }, [branchId]);
 
-    useEffect(() => {
-        if (dashboardData && dashboardData.serviceStats && chartRef.current) {
-            // ... (Code vẽ biểu đồ như bạn đã có)
-        }
-    }, [dashboardData]);
-
     if (loading) {
         return <div>Loading branch dashboard data...</div>;
     }
@@ -50,6 +47,27 @@ function BranchManagerDashboard() {
     if (!dashboardData) {
         return <div>No branch dashboard data available.</div>;
     }
+
+    const chartData = {
+        labels: dashboardData.topServices?.map(s => s.serviceName) || [],
+        datasets: [
+            {
+                label: 'Lượt đặt dịch vụ',
+                data: dashboardData.topServices?.map(s => s.appointmentCount) || [],
+                backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1,
+            }
+        ]
+    };
+
+    const chartOptions = {
+        responsive: true,
+        plugins: {
+            legend: { position: 'top' },
+            title: { display: true, text: 'Top Dịch Vụ Được Đặt Nhiều Nhất' },
+        },
+    };
 
     return (
         <div className="branch-manager-dashboard">
@@ -69,13 +87,18 @@ function BranchManagerDashboard() {
                     <p className="value">${dashboardData.todaysRevenue}</p>
                 </div>
                 <div className="data-item">
-                  <p className="label">Pending Appointments:</p>
-                  <p className="value">{dashboardData.pendingAppointments}</p>
+                    <p className="label">Pending Appointments:</p>
+                    <p className="value">{dashboardData.pendingAppointments}</p>
                 </div>
             </div>
-            <div className="chart-container">
-              <canvas ref={chartRef} width={400} height={200}></canvas>
-            </div>
+
+            {dashboardData?.topServices?.length > 0 && (
+                <div className="chart-container">
+                    <h3>Dịch vụ được đặt nhiều nhất</h3>
+                    <Bar data={chartData} options={chartOptions} />
+                </div>
+            )}
+
             {/* Các thông tin và component khác */}
         </div>
     );
