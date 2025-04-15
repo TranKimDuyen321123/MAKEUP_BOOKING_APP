@@ -2,7 +2,6 @@ package com.example.makeup_booking_app.model;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
-
 import java.sql.Timestamp;
 
 @Entity
@@ -29,7 +28,6 @@ public class Appointment {
     @JoinColumn(name = "makeup_service_id", nullable = false)
     private MakeupService makeupService;
 
-    // Constructors, Getters, Setters, and toString methods
     public Appointment() {
     }
 
@@ -39,6 +37,17 @@ public class Appointment {
         this.appointmentTime = appointmentTime;
         this.branch = branch;
         this.makeupService = makeupService;
+    }
+
+    @Override
+    public String toString() {
+        return "Appointment{" +
+                "id='" + id + '\'' +
+                ", customerName='" + customerName + '\'' +
+                ", appointmentTime=" + appointmentTime +
+                ", branch=" + branch +
+                ", makeupService=" + makeupService +
+                '}';
     }
 
     public String getId() {
@@ -78,4 +87,8 @@ public class Appointment {
     }
 
     public void setMakeupService(MakeupService makeupService) {
-        this.makeupService = makeupService
+        this.makeupService = makeupService;
+    }
+
+
+}
