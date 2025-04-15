@@ -1,10 +1,10 @@
 package com.example.makeup_booking_app.model;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.GenericGenerator;
+import java.math.BigDecimal;
 
 @Entity
-@Table(name = "makeup_services")
+@Table(name = "services")
 public class MakeupService {
 
     @Id
@@ -13,55 +13,33 @@ public class MakeupService {
     @Column(name = "id", nullable = false, unique = true)
     private String id;
 
-    @Column(name = "service_name", nullable = false)
-    private String serviceName;
+    @Column(name = "name", nullable = false, length = 100)
+    private String name;
 
-    @Column(name = "price", nullable = false)
-    private double price;
+    @Lob
+    @Column(name = "description")
+    private String description;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "category", nullable = false)
+    private Category category;
+
+    @Column(name = "price", nullable = false, precision = 10, scale = 2)
+    private BigDecimal price;
 
     @Column(name = "duration", nullable = false)
-    private int duration; // Duration in minutes
+    private Integer duration;
 
-    // Constructors, Getters, Setters, and toString methods
+    // Constructors
     public MakeupService() {
     }
 
-    public MakeupService(String id, String serviceName, double price, int duration) {
+    public MakeupService(String id, String name, String description, Category category, BigDecimal price, Integer duration) {
         this.id = id;
-        this.serviceName = serviceName;
+        this.name = name;
+        this.description = description;
+        this.category = category;
         this.price = price;
-        this.duration = duration;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getServiceName() {
-        return serviceName;
-    }
-
-    public void setServiceName(String serviceName) {
-        this.serviceName = serviceName;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public int getDuration() {
-        return duration;
-    }
-
-    public void setDuration(int duration) {
         this.duration = duration;
     }
 
@@ -69,9 +47,62 @@ public class MakeupService {
     public String toString() {
         return "MakeupService{" +
                 "id='" + id + '\'' +
-                ", serviceName='" + serviceName + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", category=" + category +
                 ", price=" + price +
                 ", duration=" + duration +
                 '}';
+    }
+
+    // Getters and Setters
+
+
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public Integer getDuration() {
+        return duration;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public void setDuration(Integer duration) {
+        this.duration = duration;
     }
 }
