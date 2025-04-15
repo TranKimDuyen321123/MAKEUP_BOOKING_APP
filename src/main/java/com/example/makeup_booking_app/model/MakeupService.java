@@ -2,6 +2,7 @@ package com.example.makeup_booking_app.model;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "services")
@@ -30,7 +31,6 @@ public class MakeupService {
     @Column(name = "duration", nullable = false)
     private Integer duration;
 
-    // Constructors
     public MakeupService() {
     }
 
@@ -104,5 +104,9 @@ public class MakeupService {
 
     public void setDuration(Integer duration) {
         this.duration = duration;
+    }
+
+    public enum Category{
+        Bridal, Casual, Party, Skincare
     }
 }
