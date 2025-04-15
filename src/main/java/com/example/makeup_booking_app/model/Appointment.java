@@ -1,105 +1,81 @@
 package com.example.makeup_booking_app.model;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.GenericGenerator;
 
-import java.time.Instant;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "appointments")
 public class Appointment {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @Column(name = "id", nullable = false, unique = true)
     private String id;
 
+    @Column(name = "customer_name", nullable = false)
+    private String customerName;
+
     @Column(name = "appointment_time", nullable = false)
-    private Instant appointmentTime;
+    private Timestamp appointmentTime;
 
-    @ColumnDefault("'PENDING'")
-    @Lob
-    @Column(name = "status")
-    private String status;
+    @ManyToOne
+    @JoinColumn(name = "branch_id", nullable = false)
+    private Branch branch;
 
-    @ColumnDefault("CURRENT_TIMESTAMP")
-    @Column(name = "created_at")
-    private Instant createdAt;
+    @ManyToOne
+    @JoinColumn(name = "makeup_service_id", nullable = false)
+    private MakeupService makeupService;
 
-    @Column(name = "user_id", nullable = false)
-    private String userId;
-
-    @Column(name = "price", nullable = false)
-    private Double price;  // Thêm thuộc tính price
-
-    public Appointment(){
+    // Constructors, Getters, Setters, and toString methods
+    public Appointment() {
     }
 
-    public Appointment(String id, Instant appointmentTime, String status, Instant createdAt, String userId, Double price) {
+    public Appointment(String id, String customerName, Timestamp appointmentTime, Branch branch, MakeupService makeupService) {
         this.id = id;
+        this.customerName = customerName;
         this.appointmentTime = appointmentTime;
-        this.status = status;
-        this.createdAt = createdAt;
-        this.userId = userId;
-        this.price = price;
-    }
-
-    @java.lang.Override
-    public java.lang.String toString() {
-        return "Appointment{" +
-                "id=" + id +
-                ", appointmentTime=" + appointmentTime +
-                ", status='" + status + '\'' +
-                ", createdAt=" + createdAt +
-                ", userId=" + userId +
-                ", price=" + price +
-                '}';
+        this.branch = branch;
+        this.makeupService = makeupService;
     }
 
     public String getId() {
         return id;
     }
 
-    public Instant getAppointmentTime() {
-        return appointmentTime;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public Double getPrice() {
-        return price;
-    }
-
     public void setId(String id) {
         this.id = id;
     }
 
-    public void setAppointmentTime(Instant appointmentTime) {
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public Timestamp getAppointmentTime() {
+        return appointmentTime;
+    }
+
+    public void setAppointmentTime(Timestamp appointmentTime) {
         this.appointmentTime = appointmentTime;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public Branch getBranch() {
+        return branch;
     }
 
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
+    public void setBranch(Branch branch) {
+        this.branch = branch;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public MakeupService getMakeupService() {
+        return makeupService;
     }
 
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-}
+    public void setMakeupService(MakeupService makeupService) {
+        this.makeupService = makeupService
