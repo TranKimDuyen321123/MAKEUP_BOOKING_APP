@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
-public interface MakeupServiceRepository extends JpaRepository<MakeupService, Integer>{
+public interface MakeupServiceRepository extends JpaRepository<MakeupService, String>{
     List<MakeupService> findByName(String name);
 
     List<MakeupService> findByNameContaining(String keyword);
