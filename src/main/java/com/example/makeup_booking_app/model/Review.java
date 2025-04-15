@@ -1,72 +1,78 @@
 package com.example.makeup_booking_app.model;
 
 import jakarta.persistence.*;
-import com.example.makeup_booking_app.model.MakeupArtist;
-import org.hibernate.annotations.ColumnDefault;
-
-import java.time.Instant;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "reviews")
 public class Review {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Integer id;
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @Column(name = "id", nullable = false, unique = true)
+    private String id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "makeup_artist_id")
-    private MakeupArtist makeupArtist;
+    @Column(name = "review_text", nullable = false)
+    private String reviewText;
 
-    @Column(name = "rating")
-    private Integer rating;
+    @Column(name = "rating", nullable = false)
+    private double rating;
 
-    @Lob
-    @Column(name = "comment")
-    private String comment;
+    @ManyToOne
+    @JoinColumn(name = "makeup_service_id", nullable = false)
+    private MakeupService makeupService;
 
-    @ColumnDefault("CURRENT_TIMESTAMP")
-    @Column(name = "created_at")
-    private Instant createdAt;
+    // Constructors, Getters, Setters, and toString methods
+    public Review() {
+    }
 
-    public Integer getId() {
+    public Review(String id, String reviewText, double rating, MakeupService makeupService) {
+        this.id = id;
+        this.reviewText = reviewText;
+        this.rating = rating;
+        this.makeupService = makeupService;
+    }
+
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public MakeupArtist getMakeupArtist() {
-        return makeupArtist;
+    public String getReviewText() {
+        return reviewText;
     }
 
-    public void setMakeupArtist(MakeupArtist makeupArtist) {
-        this.makeupArtist = makeupArtist;
+    public void setReviewText(String reviewText) {
+        this.reviewText = reviewText;
     }
 
-    public Integer getRating() {
+    public double getRating() {
         return rating;
     }
 
-    public void setRating(Integer rating) {
+    public void setRating(double rating) {
         this.rating = rating;
     }
 
-    public String getComment() {
-        return comment;
+    public MakeupService getMakeupService() {
+        return makeupService;
     }
 
-    public void setComment(String comment) {
-        this.comment = comment;
+    public void setMakeupService(MakeupService makeupService) {
+        this.makeupService = makeupService;
     }
 
-    public Instant getCreatedAt() {
-        return createdAt;
+    @Override
+    public String toString() {
+        return "Review{" +
+                "id='" + id + '\'' +
+                ", reviewText='" + reviewText + '\'' +
+                ", rating=" + rating +
+                ", makeupService=" + makeupService +
+                '}';
     }
-
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-    }
-
 }
