@@ -1,68 +1,53 @@
 package com.example.makeup_booking_app.model;
 
 import jakarta.persistence.*;
-import com.example.makeup_booking_app.model.Appointment;
-import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.GenericGenerator;
 
-import java.math.BigDecimal;
-import java.time.Instant;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "payments")
 public class Payment {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Integer id;
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @Column(name = "id", nullable = false, unique = true)
+    private String id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "appointment_id")
-    private Appointment appointment;
+    @Column(name = "amount", nullable = false)
+    private double amount;
 
-    @Column(name = "amount", nullable = false, precision = 10, scale = 2)
-    private BigDecimal amount;
-
-    @Lob
     @Column(name = "payment_method", nullable = false)
     private String paymentMethod;
 
-    @Column(name = "transaction_id", nullable = false)
-    private String transactionId;
+    @Column(name = "payment_time", nullable = false)
+    private Timestamp paymentTime;
 
-    @ColumnDefault("'PENDING'")
-    @Lob
-    @Column(name = "status")
-    private String status;
+    // Constructors, Getters, Setters, and toString methods
+    public Payment() {
+    }
 
-    @ColumnDefault("CURRENT_TIMESTAMP")
-    @Column(name = "created_at")
-    private Instant createdAt;
+    public Payment(String id, double amount, String paymentMethod, Timestamp paymentTime) {
+        this.id = id;
+        this.amount = amount;
+        this.paymentMethod = paymentMethod;
+        this.paymentTime = paymentTime;
+    }
 
-    @ColumnDefault("CURRENT_TIMESTAMP")
-    @Column(name = "updated_at")
-    private Instant updatedAt;
-
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Appointment getAppointment() {
-        return appointment;
-    }
-
-    public void setAppointment(Appointment appointment) {
-        this.appointment = appointment;
-    }
-
-    public BigDecimal getAmount() {
+    public double getAmount() {
         return amount;
     }
 
-    public void setAmount(BigDecimal amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 
@@ -74,36 +59,21 @@ public class Payment {
         this.paymentMethod = paymentMethod;
     }
 
-    public String getTransactionId() {
-        return transactionId;
+    public Timestamp getPaymentTime() {
+        return paymentTime;
     }
 
-    public void setTransactionId(String transactionId) {
-        this.transactionId = transactionId;
+    public void setPaymentTime(Timestamp paymentTime) {
+        this.paymentTime = paymentTime;
     }
 
-    public String getStatus() {
-        return status;
+    @Override
+    public String toString() {
+        return "Payment{" +
+                "id='" + id + '\'' +
+                ", amount=" + amount +
+                ", paymentMethod='" + paymentMethod + '\'' +
+                ", paymentTime=" + paymentTime +
+                '}';
     }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Instant getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Instant updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
 }
