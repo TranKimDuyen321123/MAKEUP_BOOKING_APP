@@ -1,0 +1,65 @@
+.branch-manager-dashboard {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.branch-info {
+  margin-bottom: 20px;
+}
+
+.data-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.data-item {
+  flex: 1 1 200px;
+  background-color: #f4f4f4;
+  padding: 15px 20px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 0 6px rgba(0,0,0,0.1);
+}
+
+.data-item .label {
+  font-weight: bold;
+  color: #555;
+}
+
+.data-item .value {
+  font-size: 24px;
+  color: #2a9d8f;
+}
+
+.chart-container {
+  max-width: 100%;
+  overflow-x: auto;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .data-summary {
+    flex-direction: column;
+  }
+
+  .data-item {
+    width: 100%;
+  }
+
+  .chart-container {
+    padding: 10px;
+  }
+}
+
+/* Desktop enhancement */
+@media (min-width: 1200px) {
+  .data-summary {
+    justify-content: space-between;
+  }
+}
