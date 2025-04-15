@@ -1,13 +1,16 @@
 package com.example.makeup_booking_app.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
+
 import java.sql.Timestamp;
 
 @Entity
 @Table(name = "branches")
 public class Branch {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(name = "id", nullable = false, unique = true)
     private String id;
 
@@ -111,15 +114,15 @@ public class Branch {
         this.createdAt = createdAt;
     }
 
-    // Phuong thuc tinh khoang cach giua hai diem
+    // Tính khoảng cách giữa 2 điểm
     public double distanceTo(double lat, double lon) {
-        final int R = 6371; // Bán kính Trái Đất tính bằng km
+        final int R = 6371;
         double latDistance = Math.toRadians(lat - this.latitude);
         double lonDistance = Math.toRadians(lon - this.longitude);
         double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
                 + Math.cos(Math.toRadians(this.latitude)) * Math.cos(Math.toRadians(lat))
                 * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return R * c; // Khoảng cách tính bằng km
+        return R * c;
     }
 }
