@@ -1,7 +1,9 @@
-package com.example.makeup_booking_app.Controllers;
+package com.example.makeup_booking_app.controllers;
+
 import com.example.makeup_booking_app.models.Notification;
+import com.example.makeup_booking_app.models.User;
 import com.example.makeup_booking_app.services.NotificationService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.makeup_booking_app.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,8 +13,13 @@ import java.util.List;
 @RequestMapping("/api/notifications")
 public class NotificationController {
 
-    @Autowired
-    private NotificationService notificationService;
+    private final NotificationService notificationService;
+    private final UserService userService;
+
+    public NotificationController(NotificationService notificationService, UserService userService) {
+        this.notificationService = notificationService;
+        this.userService = userService;
+    }
 
     @PostMapping("/create")
     public ResponseEntity<Notification> createNotification(@RequestBody Notification notification) {
@@ -22,18 +29,22 @@ public class NotificationController {
     @GetMapping("/{userId}")
     public ResponseEntity<List<Notification>> getNotifications(
             @PathVariable Long userId,
-            @RequestParam(required = false, defaultValue = "false") boolean unread) {
-        return ResponseEntity.ok(notificationService.getNotifications(userId, unread));
+            @RequestParam(defaultValue = "false") boolean unread) {
+
+        User user = userService.getUserById(userId); // lấy User từ userId
+        return ResponseEntity.ok(notificationService.getNotifications(user, unread));
     }
 
     @PutMapping("/mark-read/{notificationId}")
     public ResponseEntity<Notification> markAsRead(@PathVariable Long notificationId) {
-        return ResponseEntity.ok(notificationService.markAsRead(notificationId));
+        Notification updated = notificationService.markAsRead(notificationId);
+        return updated != null ? ResponseEntity.ok(updated) : ResponseEntity.notFound().build();
     }
 
     @PutMapping("/mark-all-read/{userId}")
     public ResponseEntity<Void> markAllAsRead(@PathVariable Long userId) {
-        notificationService.markAllAsRead(userId);
+        User user = userService.getUserById(userId);
+        notificationService.markAllAsRead(user);
         return ResponseEntity.ok().build();
     }
 

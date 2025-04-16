@@ -1,4 +1,4 @@
-package com.example.makeup_booking_app.Controllers;
+package com.example.makeup_booking_app.controllers;
 
 import com.example.makeup_booking_app.models.MakeupService;
 import com.example.makeup_booking_app.services.MakeupServiceService;

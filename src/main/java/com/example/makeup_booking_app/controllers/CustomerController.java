@@ -1,5 +1,5 @@
 
-package com.example.makeup_booking_app.Controllers;
+package com.example.makeup_booking_app.controllers;
 
 import com.example.makeup_booking_app.models.User;
 import com.example.makeup_booking_app.services.CustomerService;

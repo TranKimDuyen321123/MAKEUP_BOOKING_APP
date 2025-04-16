@@ -25,4 +25,6 @@ public interface ArtistRepository extends JpaRepository<Artist, Long> {
 
     // Tìm artist theo ID User
     Artist findByUserId(Long userId);
+    //tinh artist
+    long countByStatus(String status);
 }

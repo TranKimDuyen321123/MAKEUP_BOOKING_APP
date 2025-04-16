@@ -14,7 +14,10 @@ public class PermissionService {
         return permissionReporsitory.findAll();
     }
 
-    public List<Permission> partialUpdate(Long id, Permission permission) {
-        return permissionReporsitory.saveAll();
+    public Permission CreatePermission(Permission permission){
+        return permissionReporsitory.save(permission);
+    }
+    public Permission UpdatePermission(Permission permission){
+        return permissionReporsitory.save(permission);
     }
 }

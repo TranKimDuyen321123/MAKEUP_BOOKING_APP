@@ -8,6 +8,4 @@ import java.util.List;
 @Repository
 public interface PermissionReporsitory extends JpaRepository<Permission, Long> {
     List<Permission> findAllByUser(User user);
-
-    List<Permission> saveAll();
 }

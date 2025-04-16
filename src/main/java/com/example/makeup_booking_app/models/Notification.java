@@ -11,7 +11,9 @@ import java.util.Date;
 @Entity
 @Table(name = "notifications")
 public class Notification {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -24,14 +26,11 @@ public class Notification {
     @Column(name = "message", nullable = false)
     private String message;
 
-    @ColumnDefault("'UNREAD'")
-    @Lob
-    @Column(name = "status")
-    private String status;
+    @Column(name = "status", nullable = false)
+    private String status = "UNREAD";
 
-    @ColumnDefault("CURRENT_TIMESTAMP")
-    @Column(name = "created_at")
-    private Instant createdAt;
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Instant createdAt = Instant.now();
 
     public Long getId() {
         return id;
@@ -69,10 +68,11 @@ public class Notification {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt.toInstant();
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public void setRead(boolean b) {
+    public void setRead(boolean read) {
+        this.status = read ? "READ" : "UNREAD";
     }
 }

@@ -24,6 +24,12 @@ public class UserService implements UserDetailsService {
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
+//them de khong bị loi controller
+    public User getUserById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+    }
+
 
     public boolean existsByUsername(String username) {
         return userRepository.existsByUsername(username);
@@ -36,7 +42,7 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
-    // 🧩 Thêm method registerUser vào đây
+
     public User registerUser(RegisterDTO registerDTO) {
         if (existsByUsername(registerDTO.getUsername())) {
             throw new RuntimeException("Username already exists!");

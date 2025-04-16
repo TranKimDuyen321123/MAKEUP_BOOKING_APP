@@ -1,11 +1,13 @@
-package com.example.makeup_booking_app.Controllers;
+package com.example.makeup_booking_app.controllers;
 
 import com.example.makeup_booking_app.models.Booking;
 import com.example.makeup_booking_app.services.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,5 +43,11 @@ public class BookingController {
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> countBookings(@RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        long count = bookingService.countBookingsForDate(date);
+        return ResponseEntity.ok(count);
     }
 }

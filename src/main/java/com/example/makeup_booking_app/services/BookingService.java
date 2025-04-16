@@ -3,6 +3,10 @@ import com.example.makeup_booking_app.models.Booking;
 import com.example.makeup_booking_app.repositories.BookingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 @Service
@@ -32,6 +36,12 @@ public class BookingService {
             return bookingRepository.save(booking);
         }
         throw new RuntimeException("Booking not found!");
+    }
+    public long countBookingsForDate(LocalDate date) {
+        ZoneId zone = ZoneId.systemDefault();
+        Instant startOfDay = date.atStartOfDay(zone).toInstant();
+        Instant endOfDay = date.plusDays(1).atStartOfDay(zone).toInstant();
+        return bookingRepository.countByAppointmentTimeBetween(startOfDay, endOfDay);
     }
 }
 

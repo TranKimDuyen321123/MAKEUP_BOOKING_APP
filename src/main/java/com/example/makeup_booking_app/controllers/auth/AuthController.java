@@ -1,4 +1,4 @@
-package com.example.makeup_booking_app.Controllers.auth;
+package com.example.makeup_booking_app.controllers.auth;
 
 
 import org.springframework.stereotype.Controller;

@@ -93,10 +93,10 @@ public class Payment {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt.toInstant();
+    //fix
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
     }
-
     public void setStatus(String pending) {
 
     }

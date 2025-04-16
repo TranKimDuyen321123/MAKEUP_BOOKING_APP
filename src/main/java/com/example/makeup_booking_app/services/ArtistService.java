@@ -68,4 +68,8 @@ public class ArtistService {
         }
         artistRepository.deleteById(id);
     }
+
+    public long countByStatus(String status) {
+        return artistRepository.countByStatus(status);
+    }
 }

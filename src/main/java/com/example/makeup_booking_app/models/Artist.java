@@ -28,6 +28,17 @@ public class Artist {
     @Column(name = "experience")
     private Integer experience;
 
+    @Column(name = "status")
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public Long getId() {
         return id;
     }

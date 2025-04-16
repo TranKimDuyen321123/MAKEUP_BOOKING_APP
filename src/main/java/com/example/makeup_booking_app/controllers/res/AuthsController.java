@@ -1,4 +1,4 @@
-package com.example.makeup_booking_app.Controllers.res;
+package com.example.makeup_booking_app.controllers.res;
 
 
 import java.util.stream.Collectors;

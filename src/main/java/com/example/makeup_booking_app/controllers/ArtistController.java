@@ -1,4 +1,4 @@
-package com.example.makeup_booking_app.Controllers;
+package com.example.makeup_booking_app.controllers;
 
 import com.example.makeup_booking_app.models.Artist;
 import com.example.makeup_booking_app.services.ArtistService;
@@ -38,4 +38,10 @@ public class ArtistController {
     public void deleteArtist(@PathVariable Long id) {
         artistService.deleteArtist(id);
     }
+
+    @GetMapping("/count")
+    public long countByStatus(@RequestParam String status) {
+        return artistService.countByStatus(status);
+    }
 }
+
