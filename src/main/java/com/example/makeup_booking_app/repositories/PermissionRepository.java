@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface PermissionReporsitory extends JpaRepository<Permission, Long> {
+public interface PermissionRepository extends JpaRepository<Permission, Long> {
     List<Permission> findAllByUser(User user);
 }

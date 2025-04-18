@@ -52,6 +52,7 @@ public class UserService implements UserDetailsService {
         user.setUsername(registerDTO.getUsername());
         user.setPasswordHash(passwordEncoder.encode(registerDTO.getPassword())); // nhớ encode password!
         user.setRole(registerDTO.getRole());
+        user.setEmail(registerDTO.getEmail()); //add them moe
 
         return userRepository.save(user);
     }
@@ -64,7 +65,7 @@ public class UserService implements UserDetailsService {
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getUsername())
                 .password(user.getPasswordHash())
-                .roles(user.getRole())
+                .roles(user.getRole().toUpperCase())  // Đảm bảo là "ADMIN" hoặc "USER"
                 .build();
     }
 }

@@ -9,6 +9,7 @@ import java.time.Instant;
 @Table(name = "users")
 public class User {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -21,9 +22,11 @@ public class User {
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
-    @Lob
-    @Column(name = "role", nullable = false)
-    private String role;
+//    @Lob
+//    @Column(name = "role", nullable = false)
+//    private String role;
+     @Column(name = "role", nullable = false, length = 50)
+     private String role;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_at")
