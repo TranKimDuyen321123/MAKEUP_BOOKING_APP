@@ -37,15 +37,11 @@ public class Booking {
     @Column(name = "appointment_time", nullable = false)
     private Instant appointmentTime;
 
-    @ColumnDefault("'PENDING'")
-    @Lob
-    @Column(name = "status")
-    private String status;
+    @Column(name = "status", nullable = false, columnDefinition = "VARCHAR(50) DEFAULT 'PENDING'")
+    private String status = "PENDING";
 
-    @ColumnDefault("'UNPAID'")
-    @Lob
-    @Column(name = "payment_status")
-    private String paymentStatus;
+    @Column(name = "payment_status", nullable = false, columnDefinition = "VARCHAR(50) DEFAULT 'UNPAID'")
+    private String paymentStatus = "UNPAID";
 
     public Long getId() {
         return id;

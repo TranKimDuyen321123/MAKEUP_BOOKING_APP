@@ -25,21 +25,17 @@ public class Payment {
     @Column(name = "amount", nullable = false, precision = 10, scale = 2)
     private BigDecimal amount;
 
-    @Lob
-    @Column(name = "payment_method", nullable = false)
+    @Column(name = "payment_method", nullable = false, columnDefinition = "VARCHAR(100)")
     private String paymentMethod;
 
     @Column(name = "transaction_id")
     private String transactionId;
 
-    @ColumnDefault("'PENDING'")
-    @Lob
-    @Column(name = "payment_status")
-    private String paymentStatus;
+    @Column(name = "payment_status", nullable = false, columnDefinition = "VARCHAR(50) DEFAULT 'PENDING'")
+    private String paymentStatus = "PENDING";
 
-    @ColumnDefault("CURRENT_TIMESTAMP")
-    @Column(name = "created_at")
-    private Instant createdAt;
+    @Column(name = "created_at", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Instant createdAt = Instant.now();
 
     public Long getId() {
         return id;

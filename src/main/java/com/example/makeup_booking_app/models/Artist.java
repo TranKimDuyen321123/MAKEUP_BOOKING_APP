@@ -29,7 +29,7 @@ public class Artist {
     private Integer experience;
 
     @Column(name = "status")
-    private String status;
+    private String status = "AVAILABLE";
 
     public String getStatus() {
         return status;

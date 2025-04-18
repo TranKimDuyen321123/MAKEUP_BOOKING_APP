@@ -23,14 +23,11 @@ public class Schedule {
     @Column(name = "work_date", nullable = false)
     private LocalDate workDate;
 
-    @Lob
     @Column(name = "shift", nullable = false)
     private String shift;
 
-    @ColumnDefault("'AVAILABLE'")
-    @Lob
-    @Column(name = "status")
-    private String status;
+    @Column(name = "status", nullable = false, columnDefinition = "VARCHAR(50) DEFAULT 'AVAILABLE'")
+    private String status = "AVAILABLE";
 
     public Long getId() {
         return id;
