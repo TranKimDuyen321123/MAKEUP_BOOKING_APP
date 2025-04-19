@@ -17,4 +17,8 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
     @Query("SELECT SUM(p.amount) FROM Payment p WHERE p.createdAt >= :startOfDay AND p.createdAt < :endOfDay")
     BigDecimal getRevenueByDate(@Param("startOfDay") Instant startOfDay, @Param("endOfDay") Instant endOfDay);
 
+    @Query("SELECT COALESCE(SUM(p.amount), 0) FROM Payment p WHERE p.createdAt BETWEEN :start AND :end AND p.booking.branch.id = :branchId")
+    BigDecimal getRevenueByDateAndBranch(@Param("start") Instant start,
+                                         @Param("end") Instant end,
+                                         @Param("branchId") Long branchId);
 }

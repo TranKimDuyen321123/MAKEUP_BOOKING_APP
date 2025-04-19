@@ -27,4 +27,5 @@ public interface ArtistRepository extends JpaRepository<Artist, Long> {
     Artist findByUserId(Long userId);
     //tinh artist
     long countByStatus(String status);
+    long countByStatusAndBranchId(String status, Long branchId);
 }

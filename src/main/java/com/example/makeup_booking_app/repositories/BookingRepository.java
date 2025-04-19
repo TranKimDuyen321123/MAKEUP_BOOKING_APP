@@ -16,5 +16,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 //    long countByBookingDate(LocalDate bookingDate);
     // Đếm số lượng booking trong khoảng thời gian
     long countByAppointmentTimeBetween(Instant start, Instant end);
+    long countByAppointmentTimeBetweenAndBranchId(Instant start, Instant end, Long branchId);
+
 } 
 

@@ -31,10 +31,12 @@ public class SecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable()) // Disable CSRF
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless session
+
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/admin/**").hasRole("ADMIN") // Only ADMIN can access /admin/**
-                        .requestMatchers("/user/**").authenticated()   // Any authenticated user can access /user/**
-                        .anyRequest().permitAll()                     // All other requests are open to everyone
+                        .requestMatchers("/api/dashboard/**").hasAnyRole("ADMIN", "MANAGER") // Chỉ ADMIN & MANAGER được xem dashboard
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/user/**").authenticated()
+                        .anyRequest().permitAll()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) // Add JWT filter
                 .build();

@@ -32,6 +32,18 @@ public class User {
     @Column(name = "created_at")
     private Instant createdAt;
 
+    @ManyToOne
+    @JoinColumn(name = "branch_id")
+    private Branch branch;
+
+    public Branch getBranch() {
+        return branch;
+    }
+
+    public void setBranch(Branch branch) {
+        this.branch = branch;
+    }
+
     public Long getId() {
         return id;
     }
@@ -78,6 +90,10 @@ public class User {
 
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public boolean hasRole(String roleName) {
+        return this.role != null && this.role.equalsIgnoreCase(roleName);
     }
 
 }

@@ -1,116 +1,63 @@
-//package com.example.makeup_booking_app.jwt;
-//
-//
-//import java.util.Date;
-//
-//import org.springframework.security.core.userdetails.UserDetails;
-//import org.springframework.stereotype.Component;
-//
-//import io.jsonwebtoken.Claims;
-//import io.jsonwebtoken.Jwts;
-//import io.jsonwebtoken.SignatureAlgorithm;
-//
-//@Component
-//public class JwtUtil {
-//    private String secretKey = "secret";
-//
-//    //token co nhung thong tin gi??
-//    public String generateToken(String username, String role) {
-//        return Jwts.builder()
-//                .setSubject(username)
-//                .claim("role", role) // Thêm thông tin role vào token
-//                .setIssuedAt(new Date())
-//                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1 giờ
-//                .signWith(SignatureAlgorithm.HS256, secretKey)
-//                .compact();
-//
-//    }
-//
-//    public String extractUsername(String token) {
-//        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
-//    }
-//
-//    public boolean validateToken(String token, UserDetails userDetails) {
-//        return extractUsername(token).equals(userDetails.getUsername());
-//    }
-//    public String extractRole(String token) {
-//        return Jwts.parser()
-//                .setSigningKey(secretKey)
-//                .parseClaimsJws(token)
-//                .getBody()
-//                .get("role", String.class);
-//    }
-//    private boolean isTokenExpired(String token) {
-//        return extractClaims(token).getExpiration().before(new Date());
-//    }
-//
-//    private Claims extractClaims(String token) {
-//        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
-//    }
-//}
 package com.example.makeup_booking_app.jwt;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Date;
+import jakarta.annotation.PostConstruct;
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.util.Date;
 
 @Component
 public class JwtUtil {
 
-    // Tạo khóa mạnh từ lớp Keys
-    private final Key secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    @Value("${jwt.secret}")
+    private String secret;
 
-    // Tạo token với username và role
+    private Key secretKey;
+
+    @PostConstruct
+    public void init() {
+        byte[] keyBytes = secret.getBytes(StandardCharsets.UTF_8);
+        secretKey = Keys.hmacShaKeyFor(keyBytes); // Phải đủ 32 bytes trở lên
+    }
+
+    // Tạo token
     public String generateToken(String username, String role) {
         return Jwts.builder()
                 .setSubject(username)
-                .claim("role", role) // Thêm thông tin role vào token
+                .claim("role", role)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1 giờ
-                .signWith(secretKey)  // Ký bằng khóa mạnh
+                .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    // Lấy username từ token
+    // Lấy username
     public String extractUsername(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(secretKey)  // Sử dụng khóa mạnh để xác thực token
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+        return extractAllClaims(token).getSubject();
     }
 
-    // Kiểm tra token hợp lệ hay không
-    public boolean validateToken(String token, UserDetails userDetails) {
-        return extractUsername(token).equals(userDetails.getUsername());
-    }
-
-    // Lấy role từ token
+    // Lấy role
     public String extractRole(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(secretKey)  // Sử dụng khóa mạnh để xác thực token
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .get("role", String.class);
+        return extractAllClaims(token).get("role", String.class);
     }
 
-    // Kiểm tra xem token đã hết hạn hay chưa
+    // Xác minh token hợp lệ
+    public boolean validateToken(String token, UserDetails userDetails) {
+        return extractUsername(token).equals(userDetails.getUsername()) && !isTokenExpired(token);
+    }
+
     private boolean isTokenExpired(String token) {
-        return extractClaims(token).getExpiration().before(new Date());
+        return extractAllClaims(token).getExpiration().before(new Date());
     }
 
-    // Lấy các claim từ token
-    private Claims extractClaims(String token) {
+    private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(secretKey)  // Sử dụng khóa mạnh để xác thực token
+                .setSigningKey(secretKey)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
