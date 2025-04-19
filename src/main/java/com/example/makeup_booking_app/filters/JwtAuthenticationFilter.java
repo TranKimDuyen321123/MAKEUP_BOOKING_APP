@@ -2,6 +2,7 @@ package com.example.makeup_booking_app.filters;
 
 import java.io.IOException;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,16 +17,20 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import com.example.makeup_booking_app.jwt.JwtUtil;
 import com.example.makeup_booking_app.services.UserService;
+import com.example.makeup_booking_app.services.TokenBlacklistService;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     private final UserService userService;
+    private final TokenBlacklistService tokenBlacklistService;
 
-    public JwtAuthenticationFilter(JwtUtil jwtUtil, @Lazy UserService userService) {
+    @Autowired
+    public JwtAuthenticationFilter(JwtUtil jwtUtil, @Lazy UserService userService, TokenBlacklistService tokenBlacklistService) {
         this.jwtUtil = jwtUtil;
         this.userService = userService;
+        this.tokenBlacklistService = tokenBlacklistService;
     }
 
     @Override
@@ -34,7 +39,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader("Authorization");
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            String token = authHeader.substring(7); // Extract the token
+            String token = authHeader.substring(7);// Extract the token
+
+
+            //  Check if token is blacklisted
+            if (tokenBlacklistService.isBlacklisted(token)) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token is blacklisted");
+                return;
+            }
+
             String username = jwtUtil.extractUsername(token); // Extract username from token
 
             // Check if the user is not already authenticated
@@ -54,4 +67,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         chain.doFilter(request, response); // Continue the filter chain
     }
+
 }

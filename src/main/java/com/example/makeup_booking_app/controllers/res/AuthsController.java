@@ -4,6 +4,7 @@ package com.example.makeup_booking_app.controllers.res;
 import java.util.stream.Collectors;
 
 import com.example.makeup_booking_app.models.User;
+import com.example.makeup_booking_app.services.TokenBlacklistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +37,10 @@ public class AuthsController {
 
     @Autowired
     private UserService userService;
+
+    //them logout
+    @Autowired
+    private TokenBlacklistService tokenBlacklistService;
 
     @PostMapping(value= "/login",produces = "application/json" )
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
@@ -80,4 +85,19 @@ public class AuthsController {
 
         return "Token: " + token; // Test xem có nhận được token không
     }
+
+    //logout
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletRequest request) {
+        String header = request.getHeader("Authorization");
+        if (header == null || !header.startsWith("Bearer ")) {
+            return ResponseEntity
+                    .badRequest()
+                    .body("Missing or invalid Authorization header");
+        }
+        String token = header.substring(7);
+        tokenBlacklistService.blacklistToken(token);
+        return ResponseEntity.ok("Logged out successfully");
+    }
+
 }
