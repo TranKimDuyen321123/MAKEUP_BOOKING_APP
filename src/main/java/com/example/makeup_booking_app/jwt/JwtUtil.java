@@ -22,8 +22,13 @@ public class JwtUtil {
     @PostConstruct
     public void init() {
         byte[] keyBytes = secret.getBytes(StandardCharsets.UTF_8);
-        secretKey = Keys.hmacShaKeyFor(keyBytes); // Phải đủ 32 bytes trở lên
+        secretKey = Keys.hmacShaKeyFor(keyBytes);
     }
+
+    public String extractRole(String token) {
+        return extractAllClaims(token).get("role", String.class);
+    }
+
 
     // Tạo token
     public String generateToken(String username, String role) {
@@ -36,14 +41,9 @@ public class JwtUtil {
                 .compact();
     }
 
-    // Lấy username
+    // Lấy username từ token
     public String extractUsername(String token) {
         return extractAllClaims(token).getSubject();
-    }
-
-    // Lấy role
-    public String extractRole(String token) {
-        return extractAllClaims(token).get("role", String.class);
     }
 
     // Xác minh token hợp lệ
@@ -51,10 +51,12 @@ public class JwtUtil {
         return extractUsername(token).equals(userDetails.getUsername()) && !isTokenExpired(token);
     }
 
+    // Kiểm tra xem token có hết hạn không
     private boolean isTokenExpired(String token) {
         return extractAllClaims(token).getExpiration().before(new Date());
     }
 
+    // Lấy tất cả claims từ token
     private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(secretKey)
