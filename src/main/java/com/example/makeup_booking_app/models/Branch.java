@@ -1,9 +1,6 @@
 package com.example.makeup_booking_app.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.math.BigDecimal;
@@ -13,6 +10,7 @@ import java.time.Instant;
 @Table(name = "branches")
 public class Branch {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 

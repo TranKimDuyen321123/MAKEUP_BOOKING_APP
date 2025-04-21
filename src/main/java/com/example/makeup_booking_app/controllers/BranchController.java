@@ -3,6 +3,7 @@ package com.example.makeup_booking_app.controllers;
 import com.example.makeup_booking_app.models.Branch;
 import com.example.makeup_booking_app.services.BranchService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.sql.Timestamp;
 import java.util.List;
@@ -43,17 +44,18 @@ public class BranchController {
         return branchService.findByPhone(phone);
     }
 
-    //Tim kiem chi nhanh theo vi do
     @GetMapping("/search-by-latitude")
-    public List<Branch> findByLatitude(@RequestParam double latitude){
-        return branchService.findByLatitude(latitude);
+    public ResponseEntity<List<Branch>> searchByLatitudeNear(@RequestParam("latitude") double latitude) {
+        List<Branch> branches = branchService.searchByLatitudeNear(latitude);
+        return ResponseEntity.ok(branches);
     }
 
-    //Tim kiem chi nhanh theo kinh do
     @GetMapping("/search-by-longitude")
-    public List<Branch> findByLongitude(@RequestParam double longitude) {
-        return branchService.findByLongitude(longitude);
+    public ResponseEntity<List<Branch>> searchByLongitudeNear(@RequestParam("longitude") double longitude) {
+        List<Branch> branches = branchService.searchByLongitudeNear(longitude);
+        return ResponseEntity.ok(branches);
     }
+
 
     //Tim kiem chi nhanh theo thoi gian tao
     @GetMapping("/search-by-created-at")

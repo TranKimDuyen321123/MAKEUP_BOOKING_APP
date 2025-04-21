@@ -37,14 +37,12 @@ public class BranchService {
         return branchRepository.findByPhone(phone);
     }
 
-    //Tim kiem chi nhanh theo vi do
-    public List<Branch> findByLatitude(double latitude) {
-        return branchRepository.findByLongitude(latitude);
+    public List<Branch> searchByLatitudeNear(double latitude) {
+        return branchRepository.findByLatitudeNear(latitude);
     }
 
-    //Tim kiem chi nhanh theo kinh do
-    public List<Branch> findByLongitude(double longitude) {
-        return branchRepository.findByLatitude(longitude);
+    public List<Branch> searchByLongitudeNear(double longitude) {
+        return branchRepository.findByLongitudeNear(longitude);
     }
 
     //Tim chi nhanh theo thoi gian tao
