@@ -24,7 +24,8 @@ public class UserService implements UserDetailsService {
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
-//them de khong bị loi controller
+
+    //them de khong bị loi controller
     public User getUserById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
@@ -39,6 +40,7 @@ public class UserService implements UserDetailsService {
         if (existsByUsername(user.getUsername())) {
             throw new RuntimeException("Username already exists!");
         }
+        user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash())); // mã hóa trước khi lưu
         return userRepository.save(user);
     }
 
@@ -67,5 +69,23 @@ public class UserService implements UserDetailsService {
                 .password(user.getPasswordHash())
                 .roles(user.getRole().toUpperCase())  // Đảm bảo là "ADMIN" hoặc "USER"
                 .build();
+    }
+
+    //xoa id user bang tk admin
+    public void deleteUserById(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new RuntimeException("User not found with ID: " + id);
+        }
+        userRepository.deleteById(id);
+    }
+
+    public void deleteUserByUsername(String username) {
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        userOptional.ifPresentOrElse(
+                userRepository::delete,
+                () -> {
+                    throw new RuntimeException("User not found");
+                }
+        );
     }
 }

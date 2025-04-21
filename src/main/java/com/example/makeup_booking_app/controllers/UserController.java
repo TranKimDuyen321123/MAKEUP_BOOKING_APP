@@ -5,6 +5,8 @@ import com.example.makeup_booking_app.models.User;
 import com.example.makeup_booking_app.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -59,6 +61,29 @@ public class UserController {
             return ResponseEntity.ok(registeredUser);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    // Endpoint: ADMIN xóa user theo ID
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteUserById(@PathVariable Long id) {
+        try {
+            userService.deleteUserById(id);
+            return ResponseEntity.ok("User with ID " + id + " has been deleted.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    //  Endpoint: User tự xóa tài khoản của mình
+    @DeleteMapping("/me")
+    public ResponseEntity<?> deleteMyAccount(Authentication authentication) {
+        String username = authentication.getName(); // lấy từ JWT
+        try {
+            userService.deleteUserByUsername(username);
+            return ResponseEntity.ok("Your account has been deleted.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body("Failed to delete account.");
         }
     }
 }
