@@ -1,5 +1,7 @@
 package com.example.makeup_booking_app.controllers;
 
+import com.example.makeup_booking_app.dtos.BookingDTO;
+import com.example.makeup_booking_app.dtos.BookingRequest;
 import com.example.makeup_booking_app.models.Booking;
 import com.example.makeup_booking_app.services.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +32,17 @@ public class BookingController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping
-    public Booking createBooking(@RequestBody Booking booking) {
-        return bookingService.createBooking(booking);
-    }
+//    @PostMapping
+//    public Booking createBooking(@RequestBody Booking booking) {
+//        return bookingService.createBooking(booking);
+//    }
 
+    @PostMapping
+    public ResponseEntity<BookingDTO> createBooking(@RequestBody BookingRequest request) {
+        Booking booking = bookingService.createBookingFromRequest(request);
+        BookingDTO response = bookingService.toDTO(booking);
+        return ResponseEntity.ok(response);
+    }
     @PutMapping("/{id}/status")
     public ResponseEntity<Booking> updateBookingStatus(@PathVariable Long id, @RequestParam String status) {
         try {

@@ -1,8 +1,8 @@
 package com.example.makeup_booking_app.controllers;
 
-import com.example.makeup_booking_app.models.Payment;
+import com.example.makeup_booking_app.dtos.PaymentDTO;
 import com.example.makeup_booking_app.services.PaymentService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,41 +14,35 @@ import java.util.List;
 @RequestMapping("/api/payments")
 public class PaymentController {
 
-    @Autowired
-    private PaymentService paymentService;
+    private final PaymentService paymentService;
 
-    // Get all payments
+    public PaymentController(PaymentService paymentService) {
+        this.paymentService = paymentService;
+    }
+
     @GetMapping
-    public ResponseEntity<List<Payment>> getAllPayments() {
+    public ResponseEntity<List<PaymentDTO>> getAllPayments() {
         return ResponseEntity.ok(paymentService.getAllPayments());
     }
 
-    // Get payment by ID
     @GetMapping("/{id}")
-    public ResponseEntity<Payment> getPaymentById(@PathVariable Long id) {
+    public ResponseEntity<PaymentDTO> getPaymentById(@PathVariable Long id) {
         return paymentService.getPaymentById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Create a new payment
     @PostMapping
-    public ResponseEntity<Payment> createPayment(@RequestBody Payment payment) {
-        return ResponseEntity.ok(paymentService.createPayment(payment));
+    public ResponseEntity<PaymentDTO> createPayment(@RequestBody PaymentDTO dto) {
+        PaymentDTO created = paymentService.createPayment(dto);
+        return ResponseEntity.ok(created);
     }
 
-    // Update payment
     @PutMapping("/{id}")
-    public ResponseEntity<Payment> updatePayment(@PathVariable Long id, @RequestBody Payment paymentDetails) {
-        try {
-            Payment updatedPayment = paymentService.updatePayment(id, paymentDetails);
-            return ResponseEntity.ok(updatedPayment);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<PaymentDTO> updatePayment(@PathVariable Long id, @RequestBody PaymentDTO dto) {
+        return ResponseEntity.ok(paymentService.updatePayment(id, dto));
     }
 
-    // Delete payment
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePayment(@PathVariable Long id) {
         paymentService.deletePayment(id);
@@ -56,11 +50,8 @@ public class PaymentController {
     }
 
     @GetMapping("/revenue")
-    public BigDecimal getRevenueByDate(@RequestParam("date") String date) {
-        // Chuyển đổi chuỗi ngày từ client thành LocalDate
-        LocalDate localDate = LocalDate.parse(date);
-
-        // Gọi service để lấy doanh thu
-        return paymentService.getRevenueByDate(localDate);
+    public ResponseEntity<BigDecimal> getRevenueByDate(
+            @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        return ResponseEntity.ok(paymentService.getRevenueByDate(date));
     }
 }

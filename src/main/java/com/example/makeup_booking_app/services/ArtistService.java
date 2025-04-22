@@ -1,5 +1,6 @@
 package com.example.makeup_booking_app.services;
 
+import com.example.makeup_booking_app.dtos.ArtistDTO;
 import com.example.makeup_booking_app.models.Artist;
 import com.example.makeup_booking_app.models.Branch;
 import com.example.makeup_booking_app.models.User;
@@ -72,4 +73,26 @@ public class ArtistService {
     public long countByStatus(String status) {
         return artistRepository.countByStatus(status);
     }
+
+    public ArtistDTO toDTO(Artist artist) {
+        ArtistDTO dto = new ArtistDTO();
+        dto.setId(artist.getId());
+
+        if (artist.getUser() != null) {
+            dto.setUsername(artist.getUser().getUsername());
+            dto.setEmail(artist.getUser().getEmail());
+        }
+
+        if (artist.getBranch() != null) {
+            dto.setBranchId(artist.getBranch().getId());
+            dto.setBranchName(artist.getBranch().getName());
+        }
+
+        dto.setSpecialty(artist.getSpecialty());
+        dto.setExperience(artist.getExperience());
+        dto.setStatus(artist.getStatus());
+
+        return dto;
+    }
+
 }

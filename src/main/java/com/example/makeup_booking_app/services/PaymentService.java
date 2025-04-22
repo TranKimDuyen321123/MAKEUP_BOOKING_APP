@@ -1,8 +1,10 @@
 package com.example.makeup_booking_app.services;
 
+import com.example.makeup_booking_app.dtos.PaymentDTO;
+import com.example.makeup_booking_app.models.Booking;
 import com.example.makeup_booking_app.models.Payment;
+import com.example.makeup_booking_app.repositories.BookingRepository;
 import com.example.makeup_booking_app.repositories.PaymentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -11,50 +13,93 @@ import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PaymentService {
 
-    @Autowired
-    private PaymentRepository paymentRepository;
+    private final PaymentRepository paymentRepository;
+    private final BookingRepository bookingRepository;
 
-    public List<Payment> getAllPayments() {
-        return paymentRepository.findAll();
+    public PaymentService(PaymentRepository paymentRepository, BookingRepository bookingRepository) {
+        this.paymentRepository = paymentRepository;
+        this.bookingRepository = bookingRepository;
     }
 
-    public Optional<Payment> getPaymentById(Long id) {
-        return paymentRepository.findById(id);
+    public List<PaymentDTO> getAllPayments() {
+        return paymentRepository.findAll()
+                .stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
     }
 
-    public Payment createPayment(Payment payment) {
+    public Optional<PaymentDTO> getPaymentById(Long id) {
+        return paymentRepository.findById(id).map(this::toDTO);
+    }
+
+    public PaymentDTO createPayment(PaymentDTO dto) {
+        Payment payment = toEntity(dto);
+
         if (payment.getCreatedAt() == null) {
             payment.setCreatedAt(Instant.now());
         }
         if (payment.getPaymentStatus() == null) {
             payment.setPaymentStatus("PENDING");
         }
-        return paymentRepository.save(payment);
+
+        Payment saved = paymentRepository.save(payment);
+        return toDTO(saved);
     }
 
-    public Payment updatePayment(Long id, Payment paymentDetails) {
-        return paymentRepository.findById(id).map(payment -> {
-            payment.setAmount(paymentDetails.getAmount());
-            payment.setPaymentMethod(paymentDetails.getPaymentMethod());
-            payment.setTransactionId(paymentDetails.getTransactionId());
-            payment.setPaymentStatus(paymentDetails.getPaymentStatus());
-            return paymentRepository.save(payment);
-        }).orElseThrow(() -> new RuntimeException("Payment not found with id: " + id));
+    public PaymentDTO updatePayment(Long id, PaymentDTO dto) {
+        Payment existing = paymentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Payment not found with id: " + id));
+
+        existing.setAmount(dto.getAmount());
+        existing.setPaymentMethod(dto.getPaymentMethod());
+        existing.setTransactionId(dto.getTransactionId());
+        existing.setPaymentStatus(dto.getPaymentStatus());
+
+        return toDTO(paymentRepository.save(existing));
     }
 
     public void deletePayment(Long id) {
         paymentRepository.deleteById(id);
     }
+
     public BigDecimal getRevenueByDate(LocalDate date) {
-        // Tính toán startOfDay và endOfDay từ LocalDate
         Instant startOfDay = date.atStartOfDay(ZoneOffset.UTC).toInstant();
         Instant endOfDay = date.plusDays(1).atStartOfDay(ZoneOffset.UTC).toInstant();
 
-        // Gọi repository để lấy doanh thu theo ngày
         return paymentRepository.getRevenueByDate(startOfDay, endOfDay);
+    }
+
+    // Mapping helpers
+    private PaymentDTO toDTO(Payment payment) {
+        return new PaymentDTO(
+                payment.getId(),
+                payment.getBooking().getId(),
+                payment.getAmount(),
+                payment.getPaymentMethod(),
+                payment.getTransactionId(),
+                payment.getPaymentStatus(),
+                payment.getCreatedAt()
+        );
+    }
+
+    private Payment toEntity(PaymentDTO dto) {
+        Booking booking = bookingRepository.findById(dto.getBookingId())
+                .orElseThrow(() -> new RuntimeException("Booking not found with id: " + dto.getBookingId()));
+
+        Payment payment = new Payment();
+        payment.setId(dto.getId()); // optional, only for update
+        payment.setBooking(booking);
+        payment.setAmount(dto.getAmount());
+        payment.setPaymentMethod(dto.getPaymentMethod());
+        payment.setTransactionId(dto.getTransactionId());
+        payment.setPaymentStatus(dto.getPaymentStatus());
+        payment.setCreatedAt(dto.getCreatedAt());
+
+        return payment;
     }
 }

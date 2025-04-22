@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 import java.util.Optional;
 
 @Repository
-public interface BranchRepository extends JpaRepository<Branch, String>{
+public interface BranchRepository extends JpaRepository<Branch, Long>{
     List<Branch> findByName(String name);
 
     //tim gan nhat 
@@ -42,5 +42,4 @@ public interface BranchRepository extends JpaRepository<Branch, String>{
 
     void deleteByCreatedAt(Timestamp createdAt);
 
-    Optional<Object> findById(Long id);
 }

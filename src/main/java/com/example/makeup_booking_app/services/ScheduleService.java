@@ -1,6 +1,6 @@
-
 package com.example.makeup_booking_app.services;
 
+import com.example.makeup_booking_app.dtos.ScheduleDTO;
 import com.example.makeup_booking_app.models.Artist;
 import com.example.makeup_booking_app.models.Schedule;
 import com.example.makeup_booking_app.repositories.ArtistRepository;
@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ScheduleService {
@@ -19,41 +20,71 @@ public class ScheduleService {
     @Autowired
     private ArtistRepository artistRepository;
 
-    public List<Schedule> getAllSchedules() {
-        return scheduleRepository.findAll();
+    // Lấy toàn bộ lịch
+    public List<ScheduleDTO> getAllSchedules() {
+        return scheduleRepository.findAll()
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
-    public List<Schedule> getSchedulesByArtist(Long artistId) {
-        return scheduleRepository.findByArtistId(artistId);
+    // Lấy lịch theo chuyên viên
+    public List<ScheduleDTO> getSchedulesByArtist(Long artistId) {
+        return scheduleRepository.findByArtistId(artistId)
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
-    public Schedule getScheduleById(Long id) {
-        return scheduleRepository.findById(id)
+    // Lấy chi tiết một lịch
+    public ScheduleDTO getScheduleById(Long id) {
+        Schedule schedule = scheduleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Schedule not found"));
+        return convertToDTO(schedule);
     }
 
-    public Schedule createSchedule(Schedule schedule) {
-        Artist artist = artistRepository.findById(schedule.getArtist().getId())
+    //  Tạo lịch mới
+    public ScheduleDTO createSchedule(ScheduleDTO dto) {
+        Artist artist = artistRepository.findById(dto.getArtistId())
                 .orElseThrow(() -> new RuntimeException("Artist not found"));
 
+        Schedule schedule = new Schedule();
         schedule.setArtist(artist);
-        return scheduleRepository.save(schedule);
+        schedule.setShift(dto.getShift());
+        schedule.setStatus(dto.getStatus());
+        schedule.setWorkDate(dto.getWorkDate());
+
+        return convertToDTO(scheduleRepository.save(schedule));
     }
 
-    public Schedule updateSchedule(Long id, Schedule newSchedule) {
-        Schedule existing = getScheduleById(id);
+    //  Cập nhật lịch
+    public ScheduleDTO updateSchedule(Long id, ScheduleDTO dto) {
+        Schedule existing = scheduleRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Schedule not found"));
 
-        existing.setWorkDate(newSchedule.getWorkDate());
-        existing.setShift(newSchedule.getShift());
-        existing.setStatus(newSchedule.getStatus());
+        existing.setShift(dto.getShift());
+        existing.setStatus(dto.getStatus());
+        existing.setWorkDate(dto.getWorkDate());
 
-        return scheduleRepository.save(existing);
+        return convertToDTO(scheduleRepository.save(existing));
     }
 
+    // Xoá lịch
     public void deleteSchedule(Long id) {
         if (!scheduleRepository.existsById(id)) {
             throw new RuntimeException("Schedule not found");
         }
         scheduleRepository.deleteById(id);
+    }
+
+    // Chuyển từ Entity sang DTO
+    private ScheduleDTO convertToDTO(Schedule schedule) {
+        return new ScheduleDTO(
+                schedule.getId(),
+                schedule.getArtist().getId(),
+                schedule.getWorkDate(),
+                schedule.getShift(),
+                schedule.getStatus()
+        );
     }
 }

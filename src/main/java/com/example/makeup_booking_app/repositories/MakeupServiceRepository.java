@@ -11,4 +11,6 @@ import java.util.Optional;
 @Repository
 public interface MakeupServiceRepository extends JpaRepository<MakeupService, Long>{
     List<MakeupService> findByName(String name);
+
+    List<MakeupService> findByNameContainingIgnoreCase(String name);
 }
