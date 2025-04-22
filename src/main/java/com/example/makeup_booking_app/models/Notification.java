@@ -30,7 +30,11 @@ public class Notification {
     private String status = "UNREAD";
 
     @Column(name = "created_at", nullable = false, updatable = false)
-    private Instant createdAt = Instant.now();
+    private Instant createdAt;
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = Instant.now();
+    }
 
     public Long getId() {
         return id;

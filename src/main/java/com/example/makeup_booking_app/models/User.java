@@ -31,6 +31,11 @@ public class User {
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_at")
     private Instant createdAt;
+    @PrePersist
+    protected void onCreate() {
+        createdAt = Instant.now();
+    }
+
 
     @ManyToOne
     @JoinColumn(name = "branch_id")

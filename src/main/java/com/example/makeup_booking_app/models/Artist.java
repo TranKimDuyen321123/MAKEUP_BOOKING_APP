@@ -1,5 +1,6 @@
 package com.example.makeup_booking_app.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -15,11 +16,13 @@ public class Artist {
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private com.example.makeup_booking_app.models.User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.SET_NULL)
     @JoinColumn(name = "branch_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private com.example.makeup_booking_app.models.Branch branch;
 
     @Column(name = "specialty")
@@ -28,8 +31,11 @@ public class Artist {
     @Column(name = "experience")
     private Integer experience;
 
-    @Column(name = "status")
-    private String status = "AVAILABLE";
+//    @Column(name = "status")
+//    private String status = "AVAILABLE";
+     @Column(name = "status", columnDefinition = "VARCHAR(50) DEFAULT 'AVAILABLE'")
+     private String status = "AVAILABLE";
+
 
     public String getStatus() {
         return status;

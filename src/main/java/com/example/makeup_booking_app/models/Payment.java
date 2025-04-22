@@ -35,7 +35,11 @@ public class Payment {
     private String paymentStatus = "PENDING";
 
     @Column(name = "created_at", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Instant createdAt = Instant.now();
+    private Instant createdAt;
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = Instant.now();
+    }
 
     public Long getId() {
         return id;
@@ -93,7 +97,5 @@ public class Payment {
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
-    public void setStatus(String pending) {
 
-    }
 }
