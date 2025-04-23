@@ -1,6 +1,8 @@
 package com.example.makeup_booking_app.service;
 
 import com.example.makeup_booking_app.dto.AdminDashboardData;
+import com.example.makeup_booking_app.model.Appointment;
+import com.example.makeup_booking_app.model.Appointment.Status;
 import com.example.makeup_booking_app.repository.AppointmentRepository;
 import com.example.makeup_booking_app.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +20,9 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
     @Override
     public AdminDashboardData getAdminDashboardData() {
         long totalUsers = userRepository.count();
-        // Giả sử bạn có trường 'status' trong bảng 'appointments'
-        long newBookings = appointmentRepository.countByStatus("PENDING");
-        long completedBookings = appointmentRepository.countByStatus("COMPLETED");
-        long cancelledBookings = appointmentRepository.countByStatus("CANCELLED");
+        long newBookings = appointmentRepository.findByStatus(Status.PENDING).size();
+        long completedBookings = appointmentRepository.findByStatus(Status.CONFIRMED).size();
+        long cancelledBookings = appointmentRepository.findByStatus(Status.CANCELLED).size();
 
         AdminDashboardData dashboardData = new AdminDashboardData();
         dashboardData.setTotalUsers(totalUsers);
