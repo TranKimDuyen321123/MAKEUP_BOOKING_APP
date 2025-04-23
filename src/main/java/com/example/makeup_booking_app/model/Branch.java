@@ -1,18 +1,15 @@
 package com.example.makeup_booking_app.model;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.GenericGenerator;
-
 import java.sql.Timestamp;
 
 @Entity
 @Table(name = "branches")
 public class Branch {
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, unique = true)
-    private String id;
+    private Long id;
 
     @Column(name = "name", nullable = false, length = 100)
     private String name;
@@ -36,7 +33,7 @@ public class Branch {
     public Branch() {
     }
 
-    public Branch(String id, String name, String address, String phone, double latitude, double longitude) {
+    public Branch(Long id, String name, String address, String phone, double latitude, double longitude) {
         this.id = id;
         this.name = name;
         this.address = address;
@@ -58,7 +55,7 @@ public class Branch {
                 '}';
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
@@ -86,7 +83,7 @@ public class Branch {
         return createdAt;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
