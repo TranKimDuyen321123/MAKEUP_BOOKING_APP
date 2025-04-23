@@ -1,29 +1,23 @@
 package com.example.makeup_booking_app.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
-import java.time.Instant;
-import java.time.LocalDateTime;
 import com.example.makeup_booking_app.model.Appointment;
+import com.example.makeup_booking_app.model.Appointment.Status;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.sql.Timestamp;
+import java.util.List;
 
 @Repository
-public interface AppointmentRepository extends JpaRepository<Appointment, String> {
+public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
 
-    @Query("SELECT COUNT(a) FROM Appointment a WHERE DATE(a.appointmentTime) = CURRENT_DATE")
-    long countAppointmentsForToday();
+    List<Appointment> findByUser_Id(Long userId);
 
-    @Query("SELECT COUNT(a) FROM Appointment a WHERE a.appointmentTime >= :startOfWeek AND a.appointmentTime < :endOfWeek")
-    long countAppointmentsForThisWeek(Instant startOfWeek, Instant endOfWeek);
+    List<Appointment> findByMakeupArtist_Id(Long artistId);
 
-    @Query("SELECT SUM(a.price) FROM Appointment a WHERE DATE(a.appointmentTime) = CURRENT_DATE")
-    Double sumPriceForToday();
+    List<Appointment> findByStatus(Status status);
 
-    @Query("SELECT SUM(a.price) FROM Appointment a WHERE a.appointmentTime >= :startOfWeek AND a.appointmentTime < :endOfWeek")
-    Double sumPriceForThisWeek(Instant startOfWeek, Instant endOfWeek);
+    List<Appointment> findByAppointmentTimeBetween(Timestamp start, Timestamp end);
 
-    // Các phương thức khác
-    Long countByBranchIdAndAppointmentTimeBetween(String branchId, LocalDateTime startTime, LocalDateTime endTime);
-
-    Long countByStatus(String status);
+    List<Appointment> findByMakeupArtist_IdAndStatus(Long artistId, Status status);
 }
