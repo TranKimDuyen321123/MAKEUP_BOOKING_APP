@@ -1,21 +1,21 @@
 package com.example.makeup_booking_app.service;
 
-import com.example.makeup_booking_app.model.Branch;
-import com.example.makeup_booking_app.repository.BranchRepository;
-import com.example.makeup_booking_app.repository.AppointmentRepository;
-import com.example.makeup_booking_app.repository.AppointmentServiceRepository;
-import com.example.makeup_booking_app.repository.MakeupServiceRepository;
 import com.example.makeup_booking_app.dto.BranchDashboardData;
 import com.example.makeup_booking_app.dto.ServiceStat;
+import com.example.makeup_booking_app.model.Appointment;
+import com.example.makeup_booking_app.model.AppointmentService;
+import com.example.makeup_booking_app.model.Branch;
+import com.example.makeup_booking_app.repository.AppointmentRepository;
+import com.example.makeup_booking_app.repository.AppointmentServiceRepository;
+import com.example.makeup_booking_app.repository.BranchRepository;
+import com.example.makeup_booking_app.repository.MakeupServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class BranchDashboardServiceImpl implements BranchDashboardService {
@@ -33,32 +33,37 @@ public class BranchDashboardServiceImpl implements BranchDashboardService {
     private MakeupServiceRepository makeupServiceRepository;
 
     @Override
-    public BranchDashboardData getDashboardData(String branchId) {
+    public BranchDashboardData getDashboardData(Long branchId) {
         Optional<Branch> branchOptional = branchRepository.findById(branchId);
-        if (branchOptional.isPresent()) {
-            Branch branch = branchOptional.get();
-            LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
-            LocalDateTime endOfDay = LocalDate.now().atTime(LocalTime.MAX);
-            long bookingsTodayLong = appointmentRepository.countByBranchIdAndAppointmentTimeBetween(branchId, startOfDay, endOfDay);
-            int bookingsToday = (int) bookingsTodayLong;
-            List<ServiceStat> serviceStats = new ArrayList<>();
-            List<Object[]> serviceCounts = appointmentServiceRepository.countServicesByBranchId(branchId);
-            for (Object[] result : serviceCounts) {
-                String serviceName = (String) result[0];
-                String countResultString = (String) result[1]; // Giá trị count đang là String
-                try {
-                    int count = Integer.parseInt(countResultString); // Chuyển String thành int
-                    serviceStats.add(new ServiceStat(serviceName, count));
-                } catch (NumberFormatException e) {
-                    // Xử lý trường hợp chuỗi không phải là số hợp lệ (ví dụ: log lỗi)
-                    System.err.println("Error parsing count: " + countResultString + " is not a valid integer.");
-                    // Bạn có thể chọn bỏ qua service stat này hoặc gán một giá trị mặc định (ví dụ: 0)
-                    // serviceStats.add(new ServiceStat(serviceName, 0));
-                }
-            }
-            return new BranchDashboardData(branch.getName(), bookingsToday, serviceStats);
-        } else {
+        if (branchOptional.isEmpty()) {
             return null;
         }
+
+        Branch branch = branchOptional.get();
+        LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
+        LocalDateTime endOfDay = LocalDate.now().atTime(LocalTime.MAX);
+
+        long bookingsToday = appointmentRepository.findAll().stream()
+                .filter(a -> a.getMakeupArtist().getBranch().getId().equals(branchId))
+                .filter(a -> {
+                    LocalDateTime time = a.getAppointmentTime().toLocalDateTime();
+                    return !time.isBefore(startOfDay) && !time.isAfter(endOfDay);
+                })
+                .count();
+
+        List<AppointmentService> all = appointmentServiceRepository.findAll();
+        Map<String, Integer> serviceCountMap = new HashMap<>();
+
+        for (AppointmentService aps : all) {
+            if (aps.getAppointment().getMakeupArtist().getBranch().getId().equals(branchId)) {
+                String name = aps.getMakeupService().getName();
+                serviceCountMap.put(name, serviceCountMap.getOrDefault(name, 0) + 1);
+            }
+        }
+
+        List<ServiceStat> serviceStats = new ArrayList<>();
+        serviceCountMap.forEach((name, count) -> serviceStats.add(new ServiceStat(name, count)));
+
+        return new BranchDashboardData(branch.getName(), (int) bookingsToday, serviceStats);
     }
 }
