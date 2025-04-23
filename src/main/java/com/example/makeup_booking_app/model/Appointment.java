@@ -1,7 +1,6 @@
 package com.example.makeup_booking_app.model;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.GenericGenerator;
 import java.sql.Timestamp;
 
 @Entity
@@ -9,86 +8,80 @@ import java.sql.Timestamp;
 public class Appointment {
 
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    @Column(name = "id", nullable = false, unique = true)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Long id;
 
-    @Column(name = "customer_name", nullable = false)
-    private String customerName;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "makeup_artist_id", nullable = false)
+    private MakeupArtist makeupArtist;
 
     @Column(name = "appointment_time", nullable = false)
     private Timestamp appointmentTime;
 
-    @ManyToOne
-    @JoinColumn(name = "branch_id", nullable = false)
-    private Branch branch;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private Status status = Status.PENDING;
 
-    @ManyToOne
-    @JoinColumn(name = "makeup_service_id", nullable = false)
-    private MakeupService makeupService;
+    @Column(name = "created_at", nullable = false, updatable = false,
+            insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Timestamp createdAt;
 
     public Appointment() {
     }
 
-    public Appointment(String id, String customerName, Timestamp appointmentTime, Branch branch, MakeupService makeupService) {
+    public Appointment(Long id, User user, MakeupArtist makeupArtist, Timestamp appointmentTime, com.example.makeup_booking_app.model.Appointment.Status status) {
         this.id = id;
-        this.customerName = customerName;
+        this.user = user;
+        this.makeupArtist = makeupArtist;
         this.appointmentTime = appointmentTime;
-        this.branch = branch;
-        this.makeupService = makeupService;
+        this.status = status;
     }
 
     @Override
     public String toString() {
         return "Appointment{" +
-                "id='" + id + '\'' +
-                ", customerName='" + customerName + '\'' +
+                "id=" + id +
+                ", user=" + user +
+                ", makeupArtist=" + makeupArtist +
                 ", appointmentTime=" + appointmentTime +
-                ", branch=" + branch +
-                ", makeupService=" + makeupService +
+                ", status=" + status +
+                ", createdAt=" + createdAt +
                 '}';
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String getCustomerName() {
-        return customerName;
+    public User getUser() {return user;}
+
+    public void setUser(User user) {this.user = user;}
+
+    public MakeupArtist getMakeupArtist() {return makeupArtist;}
+
+    public void setMakeupArtist(MakeupArtist makeupArtist) {this.makeupArtist = makeupArtist;}
+
+    public Timestamp getAppointmentTime() {return appointmentTime;}
+
+    public void setAppointmentTime(Timestamp appointmentTime) {this.appointmentTime = appointmentTime;}
+
+    public Status getStatus() {return status;}
+
+    public void setStatus(Status status) {this.status = status;}
+
+    public Timestamp getCreatedAt() {return createdAt;}
+
+    public void setCreatedAt(Timestamp createdAt) {this.createdAt = createdAt;
     }
 
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
-    }
-
-    public Timestamp getAppointmentTime() {
-        return appointmentTime;
-    }
-
-    public void setAppointmentTime(Timestamp appointmentTime) {
-        this.appointmentTime = appointmentTime;
-    }
-
-    public Branch getBranch() {
-        return branch;
-    }
-
-    public void setBranch(Branch branch) {
-        this.branch = branch;
-    }
-
-    public MakeupService getMakeupService() {
-        return makeupService;
-    }
-
-    public void setMakeupService(MakeupService makeupService) {
-        this.makeupService = makeupService;
-    }
-
-
+    public enum Status {PENDING, CONFIRMED, CANCELLED}
 }
