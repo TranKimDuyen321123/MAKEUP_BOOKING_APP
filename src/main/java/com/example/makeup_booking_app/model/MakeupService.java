@@ -2,17 +2,15 @@ package com.example.makeup_booking_app.model;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
-import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "services")
 public class MakeupService {
 
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, unique = true)
-    private String id;
+    private Long id;
 
     @Column(name = "name", nullable = false, length = 100)
     private String name;
@@ -34,7 +32,7 @@ public class MakeupService {
     public MakeupService() {
     }
 
-    public MakeupService(String id, String name, String description, Category category, BigDecimal price, Integer duration) {
+    public MakeupService(Long id, String name, String description, Category category, BigDecimal price, Integer duration) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -46,7 +44,7 @@ public class MakeupService {
     @Override
     public String toString() {
         return "MakeupService{" +
-                "id='" + id + '\'' +
+                "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", category=" + category +
@@ -55,10 +53,7 @@ public class MakeupService {
                 '}';
     }
 
-    // Getters and Setters
-
-
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
@@ -82,7 +77,7 @@ public class MakeupService {
         return duration;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -106,7 +101,5 @@ public class MakeupService {
         this.duration = duration;
     }
 
-    public enum Category{
-        Bridal, Casual, Party, Skincare
-    }
+    public enum Category{Bridal, Casual, Party, Skincare}
 }
