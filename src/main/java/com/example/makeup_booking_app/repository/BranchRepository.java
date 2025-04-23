@@ -7,7 +7,7 @@ import java.util.List;
 import java.sql.Timestamp;
 
 @Repository
-public interface BranchRepository extends JpaRepository<Branch, String>{
+public interface BranchRepository extends JpaRepository<Branch, Long>{
     List<Branch> findByName(String name);
 
     List<Branch> findByNameContaining(String keyword);
