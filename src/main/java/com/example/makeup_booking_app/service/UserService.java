@@ -8,21 +8,21 @@ import java.util.Optional;
 
 @Service
 public abstract class UserService {
+
     @Autowired
     private UserRepository userRepository;
-    public Optional<User> findByUsername(String username) {
 
-        return UserRepository.findByUsername(username);
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
-    public boolean existsByUsername(String username) {
-
-        return userRepository.existsByUsername(username);
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 
     public User createUser(User user) {
-        if (existsByUsername(user.getUsername())) {
-            throw new RuntimeException("Username already exists!");
+        if (existsByEmail(user.getEmail())) {
+            throw new RuntimeException("Email already exists!");
         }
         return userRepository.save(user);
     }
