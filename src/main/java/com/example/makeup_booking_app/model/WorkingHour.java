@@ -1,91 +1,82 @@
 package com.example.makeup_booking_app.model;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.GenericGenerator;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "working_hours")
 public class WorkingHour {
 
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    @Column(name = "id", nullable = false, unique = true)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "branch_id", nullable = false)
-    private Branch branch;
+    @JoinColumn(name = "makeup_artist_id", nullable = false)
+    private MakeupArtist makeupArtist;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "day_of_week", nullable = false)
-    private String dayOfWeek;
+    private DayOfWeek dayOfWeek;
 
-    @Column(name = "opening_time", nullable = false)
-    private String openingTime;
+    @Column(name = "start_time", nullable = false)
+    private LocalTime startTime;
 
-    @Column(name = "closing_time", nullable = false)
-    private String closingTime;
+    @Column(name = "end_time", nullable = false)
+    private LocalTime endTime;
+
+    @Column(name = "break_time")
+    private LocalTime breakTime;
 
     // Constructors, Getters, Setters, and toString methods
     public WorkingHour() {
     }
 
-    public WorkingHour(String id, Branch branch, String dayOfWeek, String openingTime, String closingTime) {
+    public WorkingHour(Long id, MakeupArtist makeupArtist, com.example.makeup_booking_app.model.WorkingHour.DayOfWeek dayOfWeek, LocalTime startTime, LocalTime endTime, LocalTime breakTime) {
         this.id = id;
-        this.branch = branch;
+        this.makeupArtist = makeupArtist;
         this.dayOfWeek = dayOfWeek;
-        this.openingTime = openingTime;
-        this.closingTime = closingTime;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public Branch getBranch() {
-        return branch;
-    }
-
-    public void setBranch(Branch branch) {
-        this.branch = branch;
-    }
-
-    public String getDayOfWeek() {
-        return dayOfWeek;
-    }
-
-    public void setDayOfWeek(String dayOfWeek) {
-        this.dayOfWeek = dayOfWeek;
-    }
-
-    public String getOpeningTime() {
-        return openingTime;
-    }
-
-    public void setOpeningTime(String openingTime) {
-        this.openingTime = openingTime;
-    }
-
-    public String getClosingTime() {
-        return closingTime;
-    }
-
-    public void setClosingTime(String closingTime) {
-        this.closingTime = closingTime;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.breakTime = breakTime;
     }
 
     @Override
     public String toString() {
         return "WorkingHour{" +
-                "id='" + id + '\'' +
-                ", branch=" + branch +
-                ", dayOfWeek='" + dayOfWeek + '\'' +
-                ", openingTime='" + openingTime + '\'' +
-                ", closingTime='" + closingTime + '\'' +
+                "id=" + id +
+                ", makeupArtist=" + makeupArtist +
+                ", dayOfWeek=" + dayOfWeek +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", breakTime=" + breakTime +
                 '}';
     }
+
+    public Long getId() {return id;}
+
+    public void setId(Long id) {this.id = id;}
+
+    public MakeupArtist getMakeupArtist() {return makeupArtist;}
+
+    public void setMakeupArtist(MakeupArtist makeupArtist) {this.makeupArtist = makeupArtist;}
+
+    public DayOfWeek getDayOfWeek() {return dayOfWeek;}
+
+    public void setDayOfWeek(DayOfWeek dayOfWeek) {this.dayOfWeek = dayOfWeek;}
+
+    public LocalTime getStartTime() {return startTime;}
+
+    public void setStartTime(LocalTime startTime) {this.startTime = startTime;}
+
+    public LocalTime getEndTime() {return endTime;}
+
+    public void setEndTime(LocalTime endTime) {this.endTime = endTime;}
+
+    public LocalTime getBreakTime() {return breakTime;}
+
+    public void setBreakTime(LocalTime breakTime) {this.breakTime = breakTime;}
+
+    public enum DayOfWeek {Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday}
 }
