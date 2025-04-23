@@ -2,12 +2,12 @@ package com.example.makeup_booking_app.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import com.example.makeup_booking_app.MakeupService;
+import com.example.makeup_booking_app.model.MakeupService;
 import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
-public interface MakeupServiceRepository extends JpaRepository<MakeupService, String>{
+public interface MakeupServiceRepository extends JpaRepository<MakeupService, Long>{
     List<MakeupService> findByName(String name);
 
     List<MakeupService> findByNameContaining(String keyword);
