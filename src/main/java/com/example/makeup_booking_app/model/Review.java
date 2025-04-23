@@ -1,78 +1,82 @@
 package com.example.makeup_booking_app.model;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.GenericGenerator;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "reviews")
 public class Review {
 
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    @Column(name = "id", nullable = false, unique = true)
-    private String id;
-
-    @Column(name = "review_text", nullable = false)
-    private String reviewText;
-
-    @Column(name = "rating", nullable = false)
-    private double rating;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "makeup_service_id", nullable = false)
-    private MakeupService makeupService;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    // Constructors, Getters, Setters, and toString methods
+    @ManyToOne
+    @JoinColumn(name = "makeup_artist_id", nullable = false)
+    private MakeupArtist makeupArtist;
+
+    @Column(name = "rating", nullable = false)
+    private int rating;
+
+    @Lob
+    @Column(name = "comment")
+    private String comment;
+
+    @Column(name = "created_at", nullable = false, updatable = false,
+            insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Timestamp createdAt;
+
     public Review() {
     }
 
-    public Review(String id, String reviewText, double rating, MakeupService makeupService) {
+    public Review(Long id, User user, MakeupArtist makeupArtist, int rating, String comment) {
         this.id = id;
-        this.reviewText = reviewText;
+        this.user = user;
+        this.makeupArtist = makeupArtist;
         this.rating = rating;
-        this.makeupService = makeupService;
+        this.comment = comment;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getReviewText() {
-        return reviewText;
-    }
-
-    public void setReviewText(String reviewText) {
-        this.reviewText = reviewText;
-    }
-
-    public double getRating() {
-        return rating;
-    }
-
-    public void setRating(double rating) {
-        this.rating = rating;
-    }
-
-    public MakeupService getMakeupService() {
-        return makeupService;
-    }
-
-    public void setMakeupService(MakeupService makeupService) {
-        this.makeupService = makeupService;
-    }
-
-    @Override
-    public String toString() {
+    @java.lang.Override
+    public java.lang.String toString() {
         return "Review{" +
-                "id='" + id + '\'' +
-                ", reviewText='" + reviewText + '\'' +
+                "id=" + id +
+                ", user=" + user +
+                ", makeupArtist=" + makeupArtist +
                 ", rating=" + rating +
-                ", makeupService=" + makeupService +
+                ", comment='" + comment + '\'' +
+                ", createdAt=" + createdAt +
                 '}';
     }
+
+    public Long getId() {return id;}
+
+    public void setId(Long id) {this.id = id;}
+
+    public User getUser() {return user;}
+
+    public void setUser(User user) {this.user = user;}
+
+    public MakeupArtist getMakeupArtist() {return makeupArtist;}
+
+    public void setMakeupArtist(MakeupArtist makeupArtist) {this.makeupArtist = makeupArtist;}
+
+    public int getRating() {return rating;}
+
+    public void setRating(int rating) {this.rating = rating;}
+
+    public String getComment() {return comment;}
+
+    public void setComment(String comment) {this.comment = comment;}
+
+    public Timestamp getCreatedAt() {return createdAt;}
+
+    public void setCreatedAt(Timestamp createdAt) {this.createdAt = createdAt;
+    }
+
 }
